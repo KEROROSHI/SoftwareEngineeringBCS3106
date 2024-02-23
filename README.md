@@ -1,3 +1,3 @@
-# SoftwareEngineeringBSC3106
+# SoftwareEngineeringBCS3106
 Software Engineering Group L
 Title: University Council Voting System
