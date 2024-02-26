@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="64dbc12f-db02-4fb0-bf89-350379c721fb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Database/voting_table.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="64dbc12f-db02-4fb0-bf89-350379c721fb" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -41,6 +37,7 @@
     "Flask server.Flask (app.py).executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "jason",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/Users/User/Python Projexts/SoftwareEngineeringBCS3106",
@@ -144,7 +141,7 @@
       <workItem from="1708889454714" duration="251000" />
       <workItem from="1708934921529" duration="134000" />
       <workItem from="1708941771184" duration="542000" />
-      <workItem from="1708942942141" duration="115000" />
+      <workItem from="1708942942141" duration="546000" />
     </task>
     <servers />
   </component>
