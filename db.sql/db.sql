@@ -10,3 +10,5 @@ CREATE TABLE voters(
     registration_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     user_level INT(1) UNSIGNED NOT NULL
 );
+
+ALTER TABLE voters ADD COLUMN gender ENUM('male', 'female') NOT NULL AFTER student_year;
