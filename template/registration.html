@@ -24,7 +24,7 @@
 <body>
 
     <div class="container">
-        <form class="mx-auto px-3 py-4" action="">
+        <form class="mx-auto px-3 py-4" action="" method="POST">
             <h1 class="text-center">Registration</h1>
 
             <div class="row g-3 mb-3">
@@ -49,31 +49,30 @@
 
             <!-- Gender -->
             <div class="row mb-3">
-                <select class="" name="" id="" style="width: 100px; margin-left: 12px; ">
+                <select class="" name="gender" id="" style="width: 100px; margin-left: 12px; ">
                     <option value="male">Male</option>
                     <option value="female">Female</option>
-    
                 </select>
             </div>
 
             <!-- Email -->
             <div class="row mb-3">
                 <div class="col">
-                    <input type="text" class="form-control" placeholder="Email" aria-label="Email" >
+                    <input type="text" class="form-control" placeholder="Email" name="email" aria-label="Email" >
                   </div>
             </div>
 
             <!-- Password -->
             <div class="row mb-3">
                 <div class="col">
-                    <input type="text" class="form-control" placeholder="Password" aria-label="Password">
+                    <input type="text" class="form-control" placeholder="Password" aria-label="Password" name="pass1">
                   </div>
             </div>
 
             <!-- Confirm Password -->
             <div class="row mb-3">
                 <div class="col">
-                    <input type="text" class="form-control" placeholder="Confirm Password" aria-label="Last name">
+                    <input type="text" class="form-control" placeholder="Confirm Password" aria-label="Last name" name="pass2">
                   </div>
             </div>
 
