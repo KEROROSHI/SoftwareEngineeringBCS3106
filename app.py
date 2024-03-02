@@ -1,6 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from flask_mysqldb import MySQL
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
+import os
+import hashlib
+import random
+import string
+import pymysql.cursors
 
 app = Flask(__name__, template_folder="./template")
 app.secret_key = 'your_secret_key'
@@ -9,111 +13,82 @@ app.secret_key = 'your_secret_key'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'votting_db'
+app.config['MYSQL_DB'] = 'votingsystem'
 
-mysql = MySQL(app)
+UPLOAD_FOLDER = 'static/images/'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
-@app.route('/registration', methods=["GET", "POST"])
-def registration():
-    if request.method == "POST":
-        details = request.form
-        fname = details['fname']
-        lname = details['lname']
-        student_year = details['student_year']
-        gender = details['gender']
-        email = details['email']
-        pass1 = details['pass1']
-        pass2 = details['pass2']
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-        # Initialize errors array
-        errors = []
+connection = pymysql.connect(host=app.config['MYSQL_HOST'],
+                             user=app.config['MYSQL_USER'],
+                             password=app.config['MYSQL_PASSWORD'],
+                             db=app.config['MYSQL_DB'],
+                             charset='utf8mb4',
+                             cursorclass=pymysql.cursors.DictCursor)
 
-        # Password hashing
-        hashed_password = generate_password_hash(pass1)
 
-        # Input validation
-        if not (fname and lname and student_year and gender and email and pass1 and pass2):
-            errors.append('All fields are required!')
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-        if pass1 != pass2:
-            errors.append('Passwords do not match!')
 
-        # Check for duplicate email entry
-        cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM voters WHERE email = %s", (email,))
-        user = cur.fetchone()
-        cur.close()
+def generate_voter_id(length=15):
+    characters = string.ascii_letters + string.digits
+    return ''.join(random.choices(characters, k=length))
 
-        if user:
-            errors.append('Email already exists!')
 
-        if not errors:
-            # Insertion
-            cur = mysql.connection.cursor()
-            cur.execute("INSERT INTO voters (first_name, last_name, student_year, gender, email, password, user_level) VALUES(%s, %s, %s, %s, %s, %s, %s)",
-                        (fname, lname, student_year, gender, email, hashed_password, 1))  # assuming user_level = 1 for regular users
-            mysql.connection.commit()
-            cur.close()
-
-            flash('Registration successful!', 'success')
+@app.route('/voters', methods=["GET", "POST"])
+def voters():
+    if request.method == 'POST':
+        # Check if the post request has the file part
+        if 'image' not in request.files:
+            flash('No file part')
             return redirect(request.url)
 
-        # If errors exist, flash and redirect back to registration form
-        for error in errors:
-            flash(error, 'error')
-        
-        # Return to registration form with sticky values
-        return render_template("registration.html", form_data=request.form)
+        file = request.files['image']
 
-    # GET request: render registration form
-    return render_template("registration.html", form_data={})
+        # If the user does not select a file, the browser submits an empty file without a filename.
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
 
-@app.route('/adminpanel', methods=["GET", "POST"])
-def adminpanel():
-    return "hi"
+        if file and allowed_file(file.filename):
+            # Secure the filename before saving it
+            filename = secure_filename(file.filename)
 
-@app.route('/login', methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        email = request.form['email']
-        password = request.form['password']
+            # Generate a unique filename to prevent overwriting files
+            file_extension = filename.rsplit('.', 1)[1].lower()
+            random_filename = hashlib.md5(filename.encode()).hexdigest() + '.' + file_extension
 
-        # Initialize errors array
-        errors = []
+            # Save the file to the upload folder
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], random_filename))
 
-        # Check if email exists and password is correct
-        cur = mysql.connection.cursor()
-        cur.execute("SELECT email, password FROM voters WHERE email = %s", (email,))
-        user = cur.fetchone()
-        cur.close()
+            # Process form data
+            firstname = request.form['firstname']
+            lastname = request.form['lastname']
+            password = request.form['password']
 
-        print("Email entered:", email)
-        print("Password entered:", password)
-        print("User retrieved from database:", user)
+            # Hash the password
+            hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
-        if not user:
-            errors.append('Email did not match our records.')
-            print("Email not found in database.")
-        else:
-            stored_password = user[1]  # Accessing the password column
-            print("Stored password:", stored_password)
-            if check_password_hash(stored_password, password) == True:
-                errors.append('Incorrect password.')
-                print("Password verification failed.")
+            # Generate voter ID
+            voter_id = generate_voter_id()
 
-        # If there are no errors, redirect to admin panel
-        if not errors:
-            return redirect(url_for('adminpanel'))
+            # Insert data into the database
+            try:
+                with connection.cursor() as cursor:
+                    # Create a new record
+                    sql = "INSERT INTO `voters` (`voters_id`, `password`, `firstname`, `lastname`, `photo`) VALUES (%s, %s, %s, %s, %s)"
+                    cursor.execute(sql, (voter_id, hashed_password, firstname, lastname, random_filename))
+                    connection.commit()
+            except pymysql.Error as e:
+                print("Error inserting into database:", e)
+                flash('Error inserting into database', 'error')
 
-        # If errors exist, flash and redirect back to login form
-        for error in errors:
-            flash(error, 'error')
-        
-        # Return to login form with sticky values
-        return render_template("login.html", form_data=request.form, errors=errors)
+            flash('Voter added successfully', 'success')
+            return redirect(url_for('voters'))
 
-    # GET request: render login form
-    return render_template("login.html", form_data={}, errors=[])
+    return render_template('voters.html')
 
 
 if __name__ == "__main__":

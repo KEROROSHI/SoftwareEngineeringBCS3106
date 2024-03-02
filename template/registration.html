@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>Registration</title>
     <style>
-        body{
+        body {
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        form{
+
+        form {
             max-width: 500px;
             border: 1px solid;
             box-shadow: 0px 0px 10px black;
@@ -20,68 +23,76 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <form class="mx-auto px-3 py-4" action="" method="POST">
             <h1 class="text-center">Registration</h1>
             <!-- Display errors if any -->
             {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    <div class="alert alert-danger" role="alert">
-                        <ul>
-                            {% for message in messages %}
-                                <li>{{ message }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
+            {% if messages %}
+            <div class="alert alert-danger" role="alert">
+                <ul>
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
             {% endwith %}
             <div class="row g-3 mb-3">
                 <!-- First name -->
                 <div class="col">
-                    <input type="text" class="form-control" placeholder="First name" aria-label="First name" name="fname" value="{{ form_data.fname }}">
+                    <input type="text" class="form-control" placeholder="First name" aria-label="First name"
+                        name="fname" value="{{ form_data.fname }}">
                 </div>
                 <!-- Last name -->
                 <div class="col">
-                    <input type="text" class="form-control" placeholder="Last name" aria-label="Last name" name="lname" value="{{ form_data.lname }}">
+                    <input type="text" class="form-control" placeholder="Last name" aria-label="Last name" name="lname"
+                        value="{{ form_data.lname }}">
                 </div>
             </div>
             <!-- Student year -->
             <div class="row mb-3">
                 <div class="col">
-                    <input type="text" class="form-control" placeholder="Student Year" aria-label="Last name" name="student_year" value="{{ form_data.student_year }}">
+                    <input type="text" class="form-control" placeholder="Student Year" aria-label="Last name"
+                        name="student_year" value="{{ form_data.student_year }}">
                 </div>
             </div>
             <!-- Gender -->
             <div class="row mb-3">
                 <select class="" name="gender" id="" style="width: 100px; margin-left: 12px; ">
-                    <option value="male" {% if form_data.gender == 'male' %} selected {% endif %}>Male</option>
-                    <option value="female" {% if form_data.gender == 'female' %} selected {% endif %}>Female</option>
+                    <option value="male" {% if form_data.gender=='male' %} selected {% endif %}>Male</option>
+                    <option value="female" {% if form_data.gender=='female' %} selected {% endif %}>Female</option>
                 </select>
             </div>
             <!-- Email -->
             <div class="row mb-3">
                 <div class="col">
-                    <input type="text" class="form-control" placeholder="Email" name="email" aria-label="Email" value="{{ form_data.email }}">
+                    <input type="text" class="form-control" placeholder="Email" name="email" aria-label="Email"
+                        value="{{ form_data.email }}">
                 </div>
             </div>
             <!-- Password -->
             <div class="row mb-3">
                 <div class="col">
-                    <input type="password" class="form-control" placeholder="Password" aria-label="Password" name="pass1">
+                    <input type="password" class="form-control" placeholder="Password" aria-label="Password"
+                        name="pass1">
                 </div>
             </div>
             <!-- Confirm Password -->
             <div class="row mb-3">
                 <div class="col">
-                    <input type="password" class="form-control" placeholder="Confirm Password" aria-label="Last name" name="pass2">
+                    <input type="password" class="form-control" placeholder="Confirm Password" aria-label="Last name"
+                        name="pass2">
                 </div>
             </div>
             <button class="btn btn-primary col-12">Register</button>
             <div class="row text-center">
-               <p><strong>Already have an account <a href="./login.html"> Login</strong></a></p>
+                <p><strong>Already have an account <a href="./login.html"> Login</strong></a></p>
             </div>
         </form>
     </div>
 </body>
+
 </html>
