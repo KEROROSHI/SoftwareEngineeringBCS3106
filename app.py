@@ -127,7 +127,18 @@ def voters():
             flash('Voter added successfully', 'success')
             return redirect(url_for('voters'))
 
-    return render_template('voters.html')
+    # Fetch data from the database to display in the template
+    try:
+        with connection.cursor() as cursor:
+            select_query = "SELECT * FROM voters"
+            cursor.execute(select_query)
+            voters_data = cursor.fetchall()
+    except pymysql.Error as e:
+        print("Error fetching data from database:", e)
+        flash('Error fetching data from database', 'error')
+        voters_data = []
+
+    return render_template('voters.html', voters_data=voters_data)
 
 
 if __name__ == "__main__":
