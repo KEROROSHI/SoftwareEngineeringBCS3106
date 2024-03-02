@@ -1,5 +1,7 @@
+# app.py
 from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
+from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import hashlib
 import random
@@ -37,6 +39,43 @@ def generate_voter_id(length=15):
     return ''.join(random.choices(characters, k=length))
 
 
+@app.route('/login', methods=["GET", "POST"])
+def login():
+    errors = []  # Define errors variable here
+
+    if request.method == 'POST':
+        # Process form data
+        voter_ID = request.form['voter_ID']
+        password = request.form['password']
+
+        # Validate input
+        if not (voter_ID and password):
+            errors.append("All fields are required")
+        else:
+            # Retrieve user from the database
+            with connection.cursor() as cursor:
+                select_query = "SELECT * FROM voters WHERE voters_id = %s"
+                cursor.execute(select_query, (voter_ID,))
+                result = cursor.fetchone()
+
+                if result:
+                    stored_password = result['password']
+
+                    if check_password_hash(stored_password, password) == True:
+                        flash('Login successful', 'success')
+                        return redirect(url_for('voters'))
+                    else:
+                        errors.append("Password did not match our records")
+                else:
+                    errors.append("Voter ID did not match our records")
+
+        # Display errors
+        for error in errors:
+            flash(error, 'error')
+
+    return render_template('login.html', errors=errors, voter_ID=request.form.get('voter_ID', ''))
+
+
 @app.route('/voters', methods=["GET", "POST"])
 def voters():
     if request.method == 'POST':
@@ -69,7 +108,7 @@ def voters():
             password = request.form['password']
 
             # Hash the password
-            hashed_password = hashlib.sha256(password.encode()).hexdigest()
+            hashed_password = generate_password_hash(password)
 
             # Generate voter ID
             voter_id = generate_voter_id()
