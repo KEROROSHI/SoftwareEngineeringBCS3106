@@ -41,8 +41,8 @@
                     <td><img src="{{ url_for('static', filename='images/' + voter['photo']) }}" alt=""></td>
                     <td>{{ voter['voters_id'] }}</td>
                     <td>
-                        <a class='btn btn-primary' href='edit.php?id={{ voter["id"] }}'>Edit</a>
-                        <a href='delete.php?id={{ voter["id"] }}' class='btn btn-danger'>Delete</a>
+                        <a class='btn btn-primary' href='edit?id={{ voter["id"] }}'>Edit</a>
+                        <a href='delete?id={{ voter["id"] }}' class='btn btn-danger'>Delete</a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -51,7 +51,48 @@
 
         <!-- Add Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <!-- Your modal content -->
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title " id="exampleModalLabel">Add Voter</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="POST" enctype="multipart/form-data">
+                            <!-- names -->
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <input type="text" class="form-control" placeholder="First name" aria-label="First name" name="firstname">
+                                </div>
+                                <div class="col">
+                                    <input type="text" class="form-control" placeholder="Last name" aria-label="Last name" name="lastname">
+                                </div>
+                            </div>
+
+                            <!-- password -->
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <input type="text" class="form-control" placeholder="Password" aria-label="First name" name="password">
+                                </div>
+                            </div>
+
+                            <!-- FILE -->
+                            <div class="row">
+                                <input type="file" id="image" name="image">
+                            </div>
+
+                            <br>
+
+                            <button type="submit" class="btn btn-primary">Add Voter</button>
+
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -141,5 +141,28 @@ def voters():
     return render_template('voters.html', voters_data=voters_data)
 
 
+@app.route('/edit', methods=["GET", "POST"])
+def edit():
+    return render_template('edit.html')
+
+@app.route('/delete', methods=["GET"])
+def delete():
+    if request.method == 'GET':
+        voter_id = request.args.get('id')
+
+        # Delete the voter from the database
+        try:
+            with connection.cursor() as cursor:
+                delete_query = "DELETE FROM voters WHERE id = %s"
+                cursor.execute(delete_query, (voter_id,))
+                connection.commit()
+                flash('Successfully deleted', 'success')
+        except pymysql.Error as e:
+            print("Error deleting from database:", e)
+            flash('An error occurred while attempting to delete the record', 'error')
+
+        return redirect(url_for('voters'))
+
+
 if __name__ == "__main__":
     app.run(debug=True)
