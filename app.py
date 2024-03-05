@@ -162,6 +162,84 @@ def delete():
             flash('An error occurred while attempting to delete the record', 'error')
 
         return redirect(url_for('voters'))
+    
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def generate_candidate_id(length=15):
+    characters = string.ascii_letters + string.digits
+    return ''.join(random.choices(characters, k=length))
+
+
+@app.route('/candidates', methods=["GET", "POST"])
+def candidates():
+    if request.method == 'POST':
+        # Check if the post request has the file part
+        if 'image' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+
+        file = request.files['image']
+
+        # If the user does not select a file, the browser submits an empty file without a filename.
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+
+        if file and allowed_file(file.filename):
+            # Secure the filename before saving it
+            filename = secure_filename(file.filename)
+
+            # Generate a unique filename to prevent overwriting files
+            file_extension = filename.rsplit('.', 1)[1].lower()
+            random_filename = hashlib.md5(filename.encode()).hexdigest() + '.' + file_extension
+
+            # Save the file to the upload folder
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], random_filename))
+
+            # Process form data
+            firstname = request.form['firstname']
+            lastname = request.form['lastname']
+            position = request.form['position']
+            platform = request.form['platform']
+
+            # Generate candidate ID
+            candidate_id = generate_candidate_id()
+
+           # Insert data into the database
+            try:
+                with connection.cursor() as cursor:
+                 # Create a new record
+                    sql = "INSERT INTO `candidates` (`position_id`, `firstname`, `lastname`, `photo`, `platform`) VALUES (%s, %s, %s, %s, %s)"
+                    cursor.execute(sql, (position, firstname, lastname, random_filename, platform))
+                    connection.commit()
+            except pymysql.Error as e:
+                print("Error inserting into database:", e)
+                flash('Error inserting into database', 'error')
+
+            flash('Candidate added successfully', 'success')
+            return redirect(url_for('candidates'))
+
+    # Fetch data from the database to display in the template
+    try:
+        with connection.cursor() as cursor:
+            # Fetch candidates data
+            select_candidates_query = "SELECT * FROM candidates"
+            cursor.execute(select_candidates_query)
+            candidates_data = cursor.fetchall()
+
+            # Fetch positions data
+            select_positions_query = "SELECT * FROM positions"
+            cursor.execute(select_positions_query)
+            positions_data = cursor.fetchall()
+    except pymysql.Error as e:
+        print("Error fetching data from database:", e)
+        flash('Error fetching data from database', 'error')
+        candidates_data = []
+        positions_data = []
+
+    return render_template('candidates.html', candidates_data=candidates_data, positions=positions_data)
 
 
 if __name__ == "__main__":
