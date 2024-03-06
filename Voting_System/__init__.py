@@ -15,3 +15,7 @@ def admin_login():
 @app.route('/admin_dashboard')
 def admin_dashboard():
     return render_template('admin_dashboard.html')
+
+@app.route('/voter')
+def voter_login():
+    return render_template('voter_login.html')
