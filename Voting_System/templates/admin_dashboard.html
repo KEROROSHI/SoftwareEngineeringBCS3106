@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Dashboard
+{% endblock %}
+{% block content %}
+    <style>
+        #sidebar {
+            position: absolute;
+            background-color: #212121;
+            top: 0;
+            left: 0;
+            padding-top: 80px;
+            min-height: 100%;
+            width: 120px;
+            -webkit-transition: -webkit-transform .3s ease-in-out, width .3s ease-in-out;
+            -moz-transition: -moz-transform .3s ease-in-out, width .3s ease-in-out;
+            -o-transition: -o-transform .3s ease-in-out, width .3s ease-in-out;
+            transition: transform .3s ease-in-out, width .3s ease-in-out;
+        }
+
+        .header {
+            color: white;
+        }
+    </style>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark" style="z-index: 1">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                    aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    <a class="nav-link" href="#">Features</a>
+                    <a class="nav-link" href="#">Pricing</a>
+                    <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="d-flex align-items-start text-center" id="sidebar">
+        <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <h4 class="header">REPORTS</h4>
+            <button class="nav-link active" id="v-pills-dashboard-tab" data-bs-toggle="pill"
+                    data-bs-target="#v-pills-dashboard"
+                    type="button" role="tab" aria-controls="v-pills-dashboard" aria-selected="true"><i
+                    class="fa fa-dashboard"></i><br>Dashboard
+            </button>
+            <button class="nav-link" id="v-pills-votes-tab" data-bs-toggle="pill" data-bs-target="#v-pills-votes"
+                    type="button" role="tab" aria-controls="v-pills-votes" aria-selected="false"><i
+                    class="fa fa-suitcase"></i><br>Votes
+            </button>
+            <h4 class="header">MANAGE</h4>
+            <button class="nav-link" id="v-pills-voters-tab" data-bs-toggle="pill" data-bs-target="#v-pills-voters"
+                    type="button" role="tab" aria-controls="v-pills-voters" aria-selected="false"><i
+                    class="fa fa-users"></i><br>Voters
+            </button>
+            <button class="nav-link" id="v-pills-positions-tab" data-bs-toggle="pill" data-bs-target="#v-pills-positions"
+                    type="button" role="tab" aria-controls="v-pills-positions" aria-selected="false"><i
+                    class="fa fa-tasks"></i><br>Positions
+            </button>
+            <button class="nav-link" id="v-pills-candidates-tab" data-bs-toggle="pill" data-bs-target="#v-pills-candidates"
+                    type="button" role="tab" aria-controls="v-pills-candidates" aria-selected="false"><i
+                    class="fa fa-black-tie"></i><br>Candidates
+            </button>
+            <h4 class="header">SETTINGS</h4>
+            <button class="nav-link" id="v-pills-ballot_position-tab" data-bs-toggle="pill" data-bs-target="#v-pills-ballot_position"
+                    type="button" role="tab" aria-controls="v-pills-ballot_position" aria-selected="false"><i
+                    class="fa fa-file-text"></i><br>Ballot Position
+            </button>
+            <button class="nav-link" id="v-pills-election_title-tab" data-bs-toggle="pill" data-bs-target="#v-pills-election_title"
+                    type="button" role="tab" aria-controls="v-pills-election_title" aria-selected="false"><i
+                    class="fa fa-cog"></i><br>Election Title
+            </button>
+        </div>
+        <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="v-pills-dashboard" role="tabpanel"
+                 aria-labelledby="v-pills-dashboard-tab"
+                 tabindex="0" style="margin-left: 30px">{% include 'admin_login.html' %}
+            </div>
+            <div class="tab-pane fade" id="v-pills-votes" role="tabpanel" aria-labelledby="v-pills-votes-tab"
+                 tabindex="0" style="margin-left: 30px; width: 87vw">{% include 'positions.html' %}
+            </div>
+            <div class="tab-pane fade" id="v-pills-voters" role="tabpanel" aria-labelledby="v-pills-voters-tab"
+                 tabindex="0" style="margin-left: 30px; width: 87vw">
+            </div>
+            <div class="tab-pane fade" id="v-pills-positions" role="tabpanel" aria-labelledby="v-pills-positions-tab"
+                 tabindex="0" style="margin-left: 30px; width: 87vw">
+            </div>
+            <div class="tab-pane fade" id="v-pills-candidates" role="tabpanel" aria-labelledby="v-pills-candidates-tab"
+                 tabindex="0" style="margin-left: 30px; width: 87vw">
+            </div>
+            <div class="tab-pane fade" id="v-pills-ballot_position" role="tabpanel" aria-labelledby="v-pills-ballot_position-tab"
+                 tabindex="0" style="margin-left: 30px; width: 87vw">
+            </div>
+            <div class="tab-pane fade" id="v-pills-election_title" role="tabpanel" aria-labelledby="v-pills-election_title-tab"
+                 tabindex="0" style="margin-left: 30px; width: 87vw">
+            </div>
+        </div>
+    </div>
+{% endblock %}
