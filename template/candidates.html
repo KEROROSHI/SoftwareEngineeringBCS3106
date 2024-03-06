@@ -42,7 +42,7 @@
             <tbody>
                 {% for candidate in candidates_data %}
                     <tr>
-                        <td>{{ candidate.position_id }}</td>
+                        <td>{{ candidate.description }}</td> <!-- Changed from candidate.position_id to candidate.description -->
                         <td><img src="{{ url_for('static', filename='images/' + candidate.photo) }}" alt=""></td>
                         <td>{{ candidate.firstname }}</td>
                         <td>{{ candidate.lastname }}</td>
@@ -55,6 +55,7 @@
                 {% endfor %}
             </tbody>
         </table>
+        
 
         <!-- Add Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
