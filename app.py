@@ -61,7 +61,7 @@ def login():
                 if result:
                     stored_password = result['password']
 
-                    if check_password_hash(stored_password, password) == True:
+                    if check_password_hash(stored_password, password)==False:
                         flash('Login successful', 'success')
                         return redirect(url_for('voters'))
                     else:
@@ -162,6 +162,69 @@ def delete():
             flash('An error occurred while attempting to delete the record', 'error')
 
         return redirect(url_for('voters'))
+    
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def generate_candidate_id(length=15):
+    characters = string.ascii_letters + string.digits
+    return ''.join(random.choices(characters, k=length))
+
+
+@app.route('/candidates', methods=["GET", "POST"])
+def candidates():
+    if request.method == 'POST':
+        if 'image' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+
+        file = request.files['image']
+
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_extension = filename.rsplit('.', 1)[1].lower()
+            random_filename = hashlib.md5(filename.encode()).hexdigest() + '.' + file_extension
+
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], random_filename))
+
+            firstname = request.form['firstname']
+            lastname = request.form['lastname']
+            position = request.form['position']
+            platform = request.form['platform']
+
+            try:
+                with connection.cursor() as cursor:
+                    sql = "INSERT INTO `candidates` (`position_id`, `firstname`, `lastname`, `photo`, `platform`) VALUES (%s, %s, %s, %s, %s)"
+                    cursor.execute(sql, (position, firstname, lastname, random_filename, platform))
+                    connection.commit()
+            except pymysql.Error as e:
+                print("Error inserting into database:", e)
+                flash('Error inserting into database', 'error')
+
+            flash('Candidate added successfully', 'success')
+            return redirect(url_for('candidates'))
+
+    try:
+        with connection.cursor() as cursor:
+            select_candidates_query = "SELECT *, candidates.id AS canid FROM candidates LEFT JOIN positions ON positions.id=candidates.position_id ORDER BY positions.priority ASC"
+            cursor.execute(select_candidates_query)
+            candidates_data = cursor.fetchall()
+
+            select_positions_query = "SELECT * FROM positions"
+            cursor.execute(select_positions_query)
+            positions_data = cursor.fetchall()
+    except pymysql.Error as e:
+        print("Error fetching data from database:", e)
+        flash('Error fetching data from database', 'error')
+        candidates_data = []
+        positions_data = []
+
+    return render_template('candidates.html', candidates_data=candidates_data, positions=positions_data)
 
 
 if __name__ == "__main__":
