@@ -84,14 +84,14 @@
                  aria-labelledby="v-pills-dashboard-tab"
                  tabindex="0" style="width: 92vw">{% include 'dashboard.html' %}
             </div>
-            <div class="tab-pane fade" id="v-pills-votes" role="tabpanel" aria-labelledby="v-pills-votes-tab"
-                 tabindex="0" style="width: 92vw">{% include 'positions.html' %}
+            <div class="tab-pane fade " id="v-pills-votes" role="tabpanel" aria-labelledby="v-pills-votes-tab"
+                 tabindex="0" style="width: 92vw">
             </div>
             <div class="tab-pane fade" id="v-pills-voters" role="tabpanel" aria-labelledby="v-pills-voters-tab"
                  tabindex="0" style="width: 92vw">
             </div>
             <div class="tab-pane fade" id="v-pills-positions" role="tabpanel" aria-labelledby="v-pills-positions-tab"
-                 tabindex="0" style="width: 92vw">
+                 tabindex="0" style="width: 92vw">{{ url_for('positions') }}
             </div>
             <div class="tab-pane fade" id="v-pills-candidates" role="tabpanel" aria-labelledby="v-pills-candidates-tab"
                  tabindex="0" style="width: 92vw">
