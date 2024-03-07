@@ -17,7 +17,13 @@
                     <td>{{ position['description'] }}</td>
                     <td>{{ position['max_vote'] }}</td>
                     <td>
-                        <button>Edit</button>
+                        <form method="post" style="display: inline-block">
+                            <input type="hidden" value="{{ position['id'] }}" name="position_id">
+                            <button class="btn btn-outline-primary" type="submit">Edit</button>
+                        </form>
+                        <form method="post" style="display: inline-block">
+                            <button class="btn btn-outline-danger">Delete</button>
+                        </form>
                     </td>
                 </tr>
             {% endfor %}

@@ -32,12 +32,19 @@ def voter_login():
     return render_template('voter_login.html')
 
 
-@app.route('/positions')
+@app.route('/positions', methods=['GET', 'POST'])
 def positions():
     cursor = mysql_conn.cursor(dictionary=True)
     cursor.execute("SELECT * FROM positions ORDER BY priority asc")
     positions_result = cursor.fetchall()
     cursor.close()
+    if request.method == 'POST':
+        position_id = int(request.form['position_id'])-1
+        position_description = positions_result[position_id]['description']
+        position_max_vote = positions_result[position_id]['max_vote']
+        return render_template('position_update.html', position_id=position_id,
+                               position_description=position_description, position_max_cote=position_max_vote)
+
     return render_template('positions.html', positions=positions_result)
 
 
@@ -62,3 +69,18 @@ def position_create():
         else:
             return "MySQL connection failed"
     return render_template('position_create.html')
+
+
+@app.route('/position_update', methods=['GET', 'POST'])
+def position_update():
+    if request.method == "POST":
+        cursor = mysql_conn.cursor(dictionary=True)
+        position_name = request.form['position_name']
+        max_votes = request.form['max_votes']
+        print("MySQL connection is", mysql_conn)
+        if mysql_conn.is_connected():
+            cursor = mysql_conn.cursor()
+            cursor.execute("UPDATE positions SET description=%s, max_vote=%s WHERE id=%s",
+                           (position_name, max_votes, position_id))
+            mysql_conn.commit()
+            cursor.close()
