@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Voter Login</h1>
+<form method="post">
+    <div class="mb-3">
+        <label for="username" class="form-label">Voter's ID</label>
+        <input type="text" class="form-control" id="username" name="username">
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" name="password">
+    </div>
+{#    <a href="{{ url_for('admin_login') }}">Are you perhaps a Voter?</a>#}
+    <br>
+    <button type="submit" class="btn btn-primary" style="margin-top: 10px">Submit</button>
+</form>
+</body>
+</html>

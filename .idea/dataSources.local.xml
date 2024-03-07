@@ -13,6 +13,7 @@
         <introspection-scope>
           <node kind="schema">
             <name qname="@" />
+            <name qname="votingsystem" />
             <name qname="voting_db" />
           </node>
         </introspection-scope>
