@@ -19,10 +19,13 @@
                     <td>
                         <form method="post" style="display: inline-block">
                             <input type="hidden" value="{{ position['id'] }}" name="position_id">
+                            <input type="hidden" value="{{ position['description'] }}" name="position_name">
+                            <input type="hidden" value="{{ position['max_vote'] }}" name="max_votes">
                             <button class="btn btn-outline-primary" type="submit">Edit</button>
                         </form>
-                        <form method="post" style="display: inline-block">
-                            <button class="btn btn-outline-danger">Delete</button>
+                        <form method="post" style="display: inline-block" action="/delete_position">
+                            <input type="hidden" value="{{ position['id'] }}" name="position_id">
+                            <button class="btn btn-outline-danger" type="submit">Delete</button>
                         </form>
                     </td>
                 </tr>

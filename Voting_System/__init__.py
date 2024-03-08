@@ -35,15 +35,16 @@ def voter_login():
 @app.route('/positions', methods=['GET', 'POST'])
 def positions():
     cursor = mysql_conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM positions ORDER BY priority asc")
+    cursor.execute("SELECT * FROM positions ORDER BY priority ASC")
     positions_result = cursor.fetchall()
     cursor.close()
+
     if request.method == 'POST':
-        position_id = int(request.form['position_id'])-1
+        position_id = int(request.form['position_id']) - 1
         position_description = positions_result[position_id]['description']
         position_max_vote = positions_result[position_id]['max_vote']
         return render_template('position_update.html', position_id=position_id,
-                               position_description=position_description, position_max_cote=position_max_vote)
+                               position_description=position_description, position_max_vote=position_max_vote)
 
     return render_template('positions.html', positions=positions_result)
 
@@ -74,13 +75,23 @@ def position_create():
 @app.route('/position_update', methods=['GET', 'POST'])
 def position_update():
     if request.method == "POST":
-        cursor = mysql_conn.cursor(dictionary=True)
         position_name = request.form['position_name']
         max_votes = request.form['max_votes']
-        print("MySQL connection is", mysql_conn)
+        position_id = request.form['position_id']
+
+        # Determine the new priority
+        cursor = mysql_conn.cursor()
+        cursor.execute("SELECT MAX(priority) FROM positions")
+        max_priority = cursor.fetchone()[0]
+        new_priority = max_priority + 1 if max_priority is not None else 1
+        cursor.close()
+
+        # Update the position in the database
         if mysql_conn.is_connected():
-            cursor = mysql_conn.cursor()
-            cursor.execute("UPDATE positions SET description=%s, max_vote=%s WHERE id=%s",
-                           (position_name, max_votes, position_id))
+            cursor = mysql_conn.cursor(dictionary=True)
+            cursor.execute("UPDATE positions SET description=%s, max_vote=%s, priority=%s WHERE id=%s",
+                           (position_name, max_votes, new_priority, position_id))
             mysql_conn.commit()
             cursor.close()
+            return "success"
+    return render_template('position_update.html', position_id=position_id)
