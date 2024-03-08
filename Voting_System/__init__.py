@@ -77,7 +77,7 @@ def admin_dashboard():
     if 'username' in session:
         return render_template('admin_dashboard.html')
     else:
-        flash("You must be logged in as an administrator to access this page!", category='danger')
+        flash("You must be logged in as an administrator to access that page!", category='danger')
         return redirect(url_for('admin_login'))
 
 
@@ -109,7 +109,7 @@ def positions():
                                    position_description=position_description, position_max_vote=position_max_vote)
         return render_template('positions.html', positions=positions_result)
     else:
-        flash("You must be logged in as an administrator to access this page!", category='danger')
+        flash("You must be logged in as an administrator to access that page!", category='danger')
         return redirect(url_for('admin_login'))
 
 
@@ -139,7 +139,7 @@ def position_create():
                 return "MySQL connection failed"
         return render_template('position_create.html')
     else:
-        flash("You must be logged in as an administrator to access this page!", category='danger')
+        flash("You must be logged in as an administrator to access that page!", category='danger')
         return redirect(url_for('admin_login'))
 
 
@@ -173,7 +173,7 @@ def position_update(position_id):
         return render_template("position_update.html", position_id=position_id,
                                position_name=position['description'], max_votes=position['max_vote'])
     else:
-        flash("You must be logged in as an administrator to access this page!", category='danger')
+        flash("You must be logged in as an administrator to access that page!", category='danger')
         return redirect(url_for('admin_login'))
 
 
@@ -192,7 +192,7 @@ def position_delete(position_id):
         else:
             return "MySQL connection failed"
     else:
-        flash("You must be logged in as an administrator to access this page!", category='danger')
+        flash("You must be logged in as an administrator to access that page!", category='danger')
         return redirect(url_for('admin_login'))
 
 
