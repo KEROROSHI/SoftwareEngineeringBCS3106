@@ -13,7 +13,7 @@
         }
     </style>
     <div class="container">
-        <form method="post">
+        <form method="post" action="{{ url_for('position_update') }}">
             <a class="back" onclick="history.back()">&#8249; Back</a>
             <h2>Update Position</h2>
             <div class="mb-3">
@@ -26,6 +26,7 @@
                 <input type="number" class="form-control" id="max_votes" name="max_votes"
                        value="{{ position_max_vote }}">
             </div>
+            <input type="hidden" name="position_id" value="{{ position_id }}">
             <button type="submit" class="btn btn-primary" style="margin-top: 10px">Submit</button>
         </form>
     </div>

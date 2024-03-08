@@ -17,7 +17,7 @@
                     <td>{{ position['description'] }}</td>
                     <td>{{ position['max_vote'] }}</td>
                     <td>
-                        <form method="post" style="display: inline-block">
+                        {#<form method="post" style="display: inline-block">
                             <input type="hidden" value="{{ position['id'] }}" name="position_id">
                             <input type="hidden" value="{{ position['description'] }}" name="position_name">
                             <input type="hidden" value="{{ position['max_vote'] }}" name="max_votes">
@@ -26,7 +26,9 @@
                         <form method="post" style="display: inline-block" action="/delete_position">
                             <input type="hidden" value="{{ position['id'] }}" name="position_id">
                             <button class="btn btn-outline-danger" type="submit">Delete</button>
-                        </form>
+                        </form>#}
+                        <a class='btn btn-primary' href='position_update?id={{ position["id"] }}'>Edit</a>
+                        <a href='delete?id={{ position["id"] }}' class='btn btn-danger'>Delete</a>
                     </td>
                 </tr>
             {% endfor %}
