@@ -318,10 +318,22 @@ def edit_candidate():
 
 
 
-# candidate delete
 @app.route('/deletecandidate', methods=["GET", "POST"])
-def deletecandidate():
-    return render_template('deletecandidate.html')
+def delete_candidate():
+    if request.method == 'GET':
+        candidate_id = request.args.get('id')
+        try:
+            with connection.cursor() as cursor:
+                # Delete the candidate from the database
+                delete_query = "DELETE FROM candidates WHERE id = %s"
+                cursor.execute(delete_query, (candidate_id,))
+                connection.commit()
+                flash('Candidate deleted successfully', 'success')
+        except Exception as e:
+            flash(f'Error deleting candidate: {str(e)}', 'danger')
+        finally:
+            return redirect(url_for('candidates'))
+
 
 
 if __name__ == "__main__":

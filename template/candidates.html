@@ -57,37 +57,6 @@
             </tbody>
         </table>
         
-=======
-    <h1 class="text-center">Candidate List</h1>
-    <table class="table table-striped text-center">
-        <thead>
-        <tr>
-            <th>Position</th>
-            <th>Photo</th>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Platform</th>
-            <th>Tools</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for candidate in candidates_data %}
-        <tr>
-            <td>{{ candidate.description }}</td> <!-- Changed from candidate.position_id to candidate.description -->
-            <td><img src="{{ url_for('static', filename='images/' + candidate.photo) }}" alt=""></td>
-            <td>{{ candidate.firstname }}</td>
-            <td>{{ candidate.lastname }}</td>
-            <td>{{ candidate.platform }}</td>
-            <td>
-                <a class='btn btn-primary' href='editcandidate/{{ candidate.id }}'>Edit</a>
-                <a href='deletecandidate/{{ candidate.id }}' class='btn btn-danger'>Delete</a>
-            </td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
->>>>>>> d371474dfff605694f1174b9c8b7c43bd8a8e21c
-
 
     <!-- Add Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
