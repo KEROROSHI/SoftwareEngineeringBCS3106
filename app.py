@@ -141,9 +141,49 @@ def voters():
     return render_template('voters.html', voters_data=voters_data)
 
 
-@app.route('/edit', methods=["GET", "POST"])
-def edit():
-    return render_template('edit.html')
+@app.route('/editvoter', methods=["GET", "POST"])
+def edit_voter():
+    if request.method == 'GET':
+        voter_id = request.args.get('id')
+
+        try:
+            with connection.cursor() as cursor:
+                # Fetch voter details based on voter ID
+                select_query = "SELECT * FROM voters WHERE id = %s"
+                cursor.execute(select_query, (voter_id,))
+                voter = cursor.fetchone()
+
+                if not voter:
+                    flash('Voter not found', 'error')
+                    return redirect(url_for('voters'))
+
+        except pymysql.Error as e:
+            print("Error fetching voter details:", e)
+            flash('Error fetching voter details', 'error')
+            return redirect(url_for('voters'))
+
+        return render_template('editvoter.html', voter=voter)
+
+    elif request.method == 'POST':
+        voter_id = request.form['id']
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
+        voter_id_new = request.form['voter_id']
+
+        try:
+            with connection.cursor() as cursor:
+                # Update voter details in the database
+                update_query = "UPDATE voters SET firstname = %s, lastname = %s, voters_id = %s WHERE id = %s"
+                cursor.execute(update_query, (firstname, lastname, voter_id_new, voter_id))
+                connection.commit()
+
+                flash('Voter updated successfully', 'success')
+                return redirect(url_for('voters'))
+
+        except pymysql.Error as e:
+            print("Error updating voter details:", e)
+            flash('Error updating voter details', 'error')
+            return redirect(url_for('voters'))
 
 @app.route('/delete', methods=["GET"])
 def delete():
@@ -225,6 +265,11 @@ def candidates():
         positions_data = []
 
     return render_template('candidates.html', candidates_data=candidates_data, positions=positions_data)
+
+# candidate delete
+@app.route('/deletecandidate', methods=["GET", "POST"])
+def deletecandidate():
+    return render_template('deletecandidate.html')
 
 
 if __name__ == "__main__":

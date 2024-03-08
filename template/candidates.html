@@ -48,8 +48,8 @@
                         <td>{{ candidate.lastname }}</td>
                         <td>{{ candidate.platform }}</td>
                         <td>
-                            <a class='btn btn-primary' href='editcandidate/{{ candidate.id }}'>Edit</a>
-                            <a href='deletecandidate/{{ candidate.id }}' class='btn btn-danger'>Delete</a>
+                            <a class='btn btn-primary' href='editcandidate?id={{ candidate.canid }}'>Edit</a>
+                            <a href='deletecandidate?id={{ candidate.canid }}' class='btn btn-danger'>Delete</a>
                         </td>
                     </tr>
                 {% endfor %}
