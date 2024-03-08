@@ -92,7 +92,7 @@ def positions():
 
         if request.method == 'POST':
             position_id = int(request.form['position_id'])
-            # Iterate over the dictionary for the row if the position selected
+            # Iterate over the dictionary to find and return specific values from the dictionary
             position_description = next(
                 position['description'] for position in positions_result if position['id'] == position_id)
             position_max_vote = next(
@@ -108,6 +108,7 @@ def positions():
 @app.route('/position_create', methods=['GET', 'POST'])
 def position_create():
     if 'username' in session:
+        # Fetches data from the database
         cursor = mysql_conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM positions ORDER BY priority desc LIMIT 1")
         positions_result = cursor.fetchall()
@@ -118,6 +119,7 @@ def position_create():
             max_votes = request.form['max_votes']
             print("MySQL connection is", mysql_conn)
             if mysql_conn.is_connected():
+                # Inserts position data into the database
                 cursor = mysql_conn.cursor()
                 cursor.execute("INSERT INTO positions (description, max_vote, priority) VALUES (%s, %s, %s)",
                                (position_name, max_votes, priority))
@@ -170,6 +172,7 @@ def position_delete(position_id):
     print(session)
     if 'username' in session:
         if mysql_conn.is_connected():
+            # Deletes data from teh database
             cursor = mysql_conn.cursor(dictionary=True)
             cursor.execute("DELETE FROM positions WHERE id=%s", (position_id,))
             mysql_conn.commit()

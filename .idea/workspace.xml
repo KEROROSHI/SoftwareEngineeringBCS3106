@@ -5,13 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="64dbc12f-db02-4fb0-bf89-350379c721fb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Voting_System/templates/already_voted.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Voting_System/templates/ballot.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/Database/votingsystem.sql" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/Database/votingsystem.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Voting_System/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/templates/admin_dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/admin_dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/templates/admin_login.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/admin_login.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
