@@ -19,20 +19,23 @@ def hello_world():
     return render_template('base.html')
 
 
-def hash_password(password):
+def hash_password(password):  # Function to hash the given password when creating a user
     hashed_password = generate_password_hash(password)
     return hashed_password
 
 
-def checked_hashed_password(fetched_password, attempted_password):
+def checked_hashed_password(fetched_password,
+                            attempted_password):  # Function to compare hashed password to the given password
     return check_password_hash(fetched_password, attempted_password)
 
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
+        # Takes the data from the form
         username = request.form['username']
         password = request.form['password']
+        # Fetches the user data form the database
         cursor = mysql_conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM admin WHERE username = %s", (username,))
         mysql_result = cursor.fetchone()
@@ -47,8 +50,10 @@ def admin_login():
         fetched_password = mysql_result['password']
         print(fetched_password)
         print(password)
+        # Confirms the given password's hash value matches with the value retrieved from the database
         password_checker = checked_hashed_password(fetched_password, password)
         if mysql_result['username'] == username and password_checker == True:
+            # Set session of the successfully logged-in user/admin
             session['username'] = username
             print(session['username'])
             return redirect(url_for('admin_dashboard'))
@@ -60,6 +65,7 @@ def admin_login():
 
 @app.route('/logout')
 def logout_user():
+    # Destroys the session that was set when the user clicks the logout button in the navbar
     session.pop('username', None)
     return redirect(url_for('admin_login'))
 
@@ -67,6 +73,7 @@ def logout_user():
 @app.route('/admin_dashboard')
 def admin_dashboard():
     print(session)
+    # Checks if the admin is logged-in in order to access the page
     if 'username' in session:
         return render_template('admin_dashboard.html')
     else:
@@ -82,6 +89,7 @@ def voter_login():
 @app.route('/positions', methods=['GET', 'POST'])
 def positions():
     print(session)
+    # Checks if the admin is logged-in in order to access the page
     if 'username' in session:
         # Fetch data position data from database
         cursor = mysql_conn.cursor(dictionary=True)
@@ -107,6 +115,7 @@ def positions():
 
 @app.route('/position_create', methods=['GET', 'POST'])
 def position_create():
+    # Checks if the admin is logged-in in order to access the page
     if 'username' in session:
         # Fetches data from the database
         cursor = mysql_conn.cursor(dictionary=True)
@@ -137,6 +146,7 @@ def position_create():
 @app.route('/position_update/<int:position_id>', methods=['GET', 'POST'])
 def position_update(position_id):
     print(session)
+    # Checks if the admin is logged-in in order to access the page
     if 'username' in session:
         # Fetch position data from the database
         cursor = mysql_conn.cursor(dictionary=True)
@@ -170,6 +180,7 @@ def position_update(position_id):
 @app.route('/position_delete/<int:position_id>', methods=['GET', 'POST'])
 def position_delete(position_id):
     print(session)
+    # Checks if the admin is logged-in in order to access the page
     if 'username' in session:
         if mysql_conn.is_connected():
             # Deletes data from teh database
