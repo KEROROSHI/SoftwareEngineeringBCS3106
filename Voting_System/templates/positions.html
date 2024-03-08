@@ -27,7 +27,7 @@
                             <input type="hidden" value="{{ position['id'] }}" name="position_id">
                             <button class="btn btn-outline-danger" type="submit">Delete</button>
                         </form>#}
-                        <a class='btn btn-primary' href='position_update?id={{ position["id"] }}'>Edit</a>
+                        <a class='btn btn-primary' href='{{ url_for("position_update", position_id=position["id"]) }}'>Edit</a>
                         <a href='delete?id={{ position["id"] }}' class='btn btn-danger'>Delete</a>
                     </td>
                 </tr>

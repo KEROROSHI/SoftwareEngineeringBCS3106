@@ -97,12 +97,12 @@ def position_create():
 #             cursor.close()
 #             return "success"
 
-@app.route('/position_update', methods=['GET', 'POST'])
-def position_update():
+@app.route('/position_update/<int:position_id>', methods=['GET', 'POST'])
+def position_update(position_id):
     if request.method == "POST":
-        position_id = request.form['position_id']
         position_name = request.form['position_name']
         max_votes = request.form['max_votes']
+
         # Update the position in the database
         if mysql_conn.is_connected():
             cursor = mysql_conn.cursor()
@@ -113,4 +113,13 @@ def position_update():
             return redirect(url_for('positions'))  # Redirect to the positions page after update
         else:
             return "MySQL connection failed"
-    return render_template("position_update.html")
+
+    # Fetch position data from the database
+    cursor = mysql_conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM positions WHERE id = %s", (position_id,))
+    position = cursor.fetchone()
+    cursor.close()
+
+    # Pass position data to the template
+    return render_template("position_update.html", position_id=position_id,
+                           position_name=position['description'], max_votes=position['max_vote'])
