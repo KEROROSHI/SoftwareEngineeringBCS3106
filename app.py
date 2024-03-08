@@ -268,6 +268,56 @@ def candidates():
 
     return render_template('candidates.html', candidates_data=candidates_data, positions=positions_data)
 
+# Updated edit_candidate route without the <int:id> parameter
+@app.route('/editcandidate', methods=["GET", "POST"])
+def edit_candidate():
+    if request.method == 'GET':
+        # Retrieve the candidate ID from the request parameters
+        candidate_id = request.args.get('id')
+
+        try:
+            with connection.cursor() as cursor:
+                # Fetch candidate details based on candidate ID
+                select_candidate_query = "SELECT * FROM candidates WHERE id = %s"
+                cursor.execute(select_candidate_query, (candidate_id,))
+                candidate_data = cursor.fetchone()
+
+                # Fetch positions data to populate the dropdown
+                select_positions_query = "SELECT * FROM positions"
+                cursor.execute(select_positions_query)
+                positions_data = cursor.fetchall()
+
+        except pymysql.Error as e:
+            print("Error fetching data from database:", e)
+            flash('Error fetching data from database', 'error')
+            return redirect(url_for('candidates'))
+
+        return render_template('editcandidate.html', candidate=candidate_data, positions=positions_data)
+
+    elif request.method == 'POST':
+        # Retrieve form data
+        candidate_id = request.form['id']
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
+        position_id = request.form['positionid']
+        platform = request.form['platform']
+
+        try:
+            with connection.cursor() as cursor:
+                # Update candidate details in the database
+                update_query = "UPDATE candidates SET firstname = %s, lastname = %s, position_id = %s, platform = %s WHERE id = %s"
+                cursor.execute(update_query, (firstname, lastname, position_id, platform, candidate_id))
+                connection.commit()
+                flash('Candidate updated successfully', 'success')
+
+        except pymysql.Error as e:
+            print("Error updating candidate in database:", e)
+            flash('Error updating candidate in database', 'error')
+
+        return redirect(url_for('candidates'))  # Redirect to candidates page or handle appropriately
+
+
+
 # candidate delete
 @app.route('/deletecandidate', methods=["GET", "POST"])
 def deletecandidate():
