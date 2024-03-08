@@ -61,7 +61,7 @@ def login():
                 if result:
                     stored_password = result['password']
 
-                    if check_password_hash(stored_password, password)==False:
+                    if check_password_hash(stored_password, password) == False:
                         flash('Login successful', 'success')
                         return redirect(url_for('voters'))
                     else:
@@ -185,6 +185,7 @@ def edit_voter():
             flash('Error updating voter details', 'error')
             return redirect(url_for('voters'))
 
+
 @app.route('/delete', methods=["GET"])
 def delete():
     if request.method == 'GET':
@@ -202,7 +203,8 @@ def delete():
             flash('An error occurred while attempting to delete the record', 'error')
 
         return redirect(url_for('voters'))
-    
+
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
