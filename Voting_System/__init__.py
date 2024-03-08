@@ -75,6 +75,12 @@ def position_create():
 
 @app.route('/position_update/<int:position_id>', methods=['GET', 'POST'])
 def position_update(position_id):
+    # Fetch position data from the database
+    cursor = mysql_conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM positions WHERE id = %s", (position_id,))
+    position = cursor.fetchone()
+    cursor.close()
+
     if request.method == "POST":
         position_name = request.form['position_name']
         max_votes = request.form['max_votes']
@@ -90,12 +96,18 @@ def position_update(position_id):
         else:
             return "MySQL connection failed"
 
-    # Fetch position data from the database
-    cursor = mysql_conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM positions WHERE id = %s", (position_id,))
-    position = cursor.fetchone()
-    cursor.close()
-
     # Pass position data to the template
     return render_template("position_update.html", position_id=position_id,
                            position_name=position['description'], max_votes=position['max_vote'])
+
+
+@app.route('/position_delete/<int:position_id>', methods=['GET', 'POST'])
+def position_delete(position_id):
+    if mysql_conn.is_connected():
+        cursor = mysql_conn.cursor(dictionary=True)
+        cursor.execute("DELETE FROM positions WHERE id=%s", (position_id,))
+        mysql_conn.commit()
+        cursor.close()
+        return redirect(url_for('positions'))
+    else:
+        return "MySQL connection failed"
