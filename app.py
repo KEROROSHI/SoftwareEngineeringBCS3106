@@ -34,6 +34,14 @@ def generate_voter_id(length=15):
 
 
 
+def hashed_password(password):
+    return generate_password_hash(password)
+
+
+def check_password(password, hashed_password):
+    return check_password_hash(hashed_password, password)
+
+
 @app.route('/login', methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -65,13 +73,13 @@ def login():
         else:
             stored_password = user[2]  # Accessing the password column
             print("Stored password:", stored_password)
-            if check_password_hash(stored_password, password) == False:
+            if not check_password(password, stored_password):
                 errors.append('Incorrect password.')
                 print("Password verification failed.")
 
         # If there are no errors, redirect to admin panel
         if not errors:
-            return redirect(url_for('adminpanel'))
+            return redirect(url_for('voters'))
 
         # If errors exist, flash and redirect back to login form
         for error in errors:
@@ -82,6 +90,8 @@ def login():
 
     # GET request: render login form
     return render_template("login.html", form_data={}, errors=[])
+
+
 @app.route('/voters', methods=["GET", "POST"])
 def voters():
     if request.method == 'POST':
@@ -113,8 +123,8 @@ def voters():
             lastname = request.form['lastname']
             password = request.form['password']
 
-            # Hash the password
-            hashed_password = generate_password_hash(password)
+            # Hash the password using the function
+            hashed_pass = hashed_password(password)
 
             # Generate voter ID
             voter_id = generate_voter_id()
@@ -124,7 +134,7 @@ def voters():
                 cursor = mysql_conn.cursor()
                 # Create a new record
                 sql = "INSERT INTO `voters` (`voters_id`, `password`, `firstname`, `lastname`, `photo`) VALUES (%s, %s, %s, %s, %s)"
-                cursor.execute(sql, (voter_id, hashed_password, firstname, lastname, random_filename))
+                cursor.execute(sql, (voter_id, hashed_pass, firstname, lastname, random_filename))
                 mysql_conn.commit()
                 cursor.close()
             except mysql.connector.Error as e:
