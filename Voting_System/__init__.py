@@ -114,7 +114,7 @@ def voter_login():
 @app.route('/voter_logout')
 def voter_logout():
     # Destroys the session that was set when the user clicks the logout button in the navbar
-    session.pop('voter_id', None)
+    session.pop('voters_id', None)
     session.pop('voters_name', None)
     return redirect(url_for('voter_login'))
 
@@ -233,15 +233,13 @@ def position_delete(position_id):
 def ballot():
     cursor = mysql_conn.cursor(dictionary=True)
     print(session)
-
     if 'voters_id' in session:
         cursor.execute("SELECT * FROM votes WHERE voters_id = %s", (session['voters_id'],))
         votes = cursor.fetchall()
         cursor.close()
-
         if len(votes) > 0:
             flash("You have already voted for this")
-            return render_template('already_voted.html')
+            return redirect(url_for('already_voted'))
         else:
             cursor = mysql_conn.cursor(dictionary=True)
             cursor.execute("SELECT * FROM positions ORDER BY priority ASC")
@@ -262,15 +260,66 @@ def ballot():
                     candidate[
                         'input'] = f'<input type="{input_type}" class="flat-red {position["description"]}" name="{position["description"]}[]" value="{candidate["id"]}" {checked}>'
                     candidate['image'] = candidate['photo'] if candidate[
-                        'photo'] else 'images/9691288a3fadba6a8e6173d4eea20488.jpg'
+                        'photo'] else url_for("static", filename="images/9691288a3fadba6a8e6173d4eea20488.jpg")
                 position['instruct'] = f'You may select up to {position["max_vote"]} candidates' if position[
                                                                                                         'max_vote'] > 1 else 'Select only one candidate'
                 position['candidates'] = candidates
             return render_template('ballot.html', positions=positions)
     else:
+        flash('Please login to access that page!', category='danger')
         return redirect(url_for('voter_login'))
 
 
 @app.route('/submit_ballot', methods=['GET', 'POST'])
 def submit_ballot():
-    return render_template('base.html')
+    if request.method == 'POST':
+        cursor = mysql_conn.cursor(dictionary=True)
+        if 'vote' in request.form:
+            if len(request.form) == 1:
+                flash('Please vote for at least one candidate', category='danger')
+                return redirect(url_for('ballot'))
+            else:
+                session['post'] = request.form
+                cursor.execute("SELECT * FROM positions")
+                positions = cursor.fetchall()
+                error = False
+                sql_array = []
+                for position in positions:
+                    pos_id = position['id']
+                    if position['description'] in request.form:
+                        if position['max_vote'] > 1:
+                            if len(request.form.getlist(position['description'])) > position['max_vote']:
+                                error = True
+                                flash(
+                                    'You can only choose ' + str(position['max_vote']) + ' candidates for ' + position[
+                                        'description'], category='danger')
+                                return redirect(url_for('ballot'))
+                            else:
+                                for candidate in request.form.getlist(position['description']):
+                                    sql_array.append(
+                                        "INSERT INTO votes (voters_id, candidate_id, position_id) VALUES ('" + str(
+                                            session['voters_id']) + "', '" + str(candidate) + "', '" + str(
+                                            pos_id) + "')")
+                        else:
+                            candidate = request.form[position['description']]
+                            sql_array.append("INSERT INTO votes (voters_id, candidate_id, position_id) VALUES ('" + str(
+                                session['voters_id']) + "', '" + str(candidate) + "', '" + str(pos_id) + "')")
+                if not error:
+                    for sql_row in sql_array:
+                        try:
+                            cursor.execute(sql_row)
+                        except Exception as e:
+                            print("An error occurred: ", e)
+                    if 'post' in session:
+                        session.pop('post', None)
+                    flash('Ballot Submitted', category='success')
+                    return redirect(url_for('already_voted'))
+        else:
+            flash('Select candidates to vote first', category='error')
+            return redirect(url_for('ballot'))
+    return redirect(url_for('ballot'))
+
+
+@app.route('/ballot/already_voted')
+def already_voted():
+    return render_template('already_voted.html')

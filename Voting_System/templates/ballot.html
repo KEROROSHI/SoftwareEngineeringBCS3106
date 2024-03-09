@@ -16,7 +16,7 @@
                     <a class="nav-link" href="#">Features</a>
                     <a class="nav-link" href="#">Pricing</a>
                     <a class="nav-link disabled" aria-disabled="true">{{ session['voters_name'] }}</a>
-                    <a class="nav-link" href="{{url_for('voter_logout')}}">Logout</a>
+                    <a class="nav-link" href="{{ url_for('voter_logout') }}">Logout</a>
                 </div>
             </div>
         </div>
@@ -33,49 +33,51 @@
             {% endif %}
         {% endwith %}
         <h1 class="text-center">Elections</h1>
-        {% for position in positions %}
-            <div class="row">
-                <div class="col-12">
-                    <div class="card mb-3" id="{{ position['id'] }}">
-                        <div class="card-header">
-                            <h3 class="card-title"><b>{{ position['description'] }}</b></h3>
-                        </div>
-                        <div class="card-body">
-                            <p>{{ position['instruct'] }}
-                                <span class="float-end">
+        <form method="post" action="{{ url_for('submit_ballot') }}">
+            {% for position in positions %}
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card mb-3" id="{{ position['id'] }}">
+                            <div class="card-header">
+                                <h3 class="card-title"><b>{{ position['description'] }}</b></h3>
+                            </div>
+                            <div class="card-body">
+                                <p>{{ position['instruct'] }}
+                                    <span class="float-end">
                                 <button type="button" class="btn btn-success btn-sm reset"
                                         data-desc="{{ position['description'] }}"><i
                                         class="bi bi-arrow-repeat"></i> Reset</button>
                             </span>
-                            </p>
-                            <div id="candidate_list">
-                                <ul class="list-group">
-                                    {% for candidate in position['candidates'] %}
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            {{ candidate['input']|safe }}
-                                            <button type="button" class="btn btn-primary btn-sm platform"
-                                                    data-platform="{{ candidate['platform'] }}"
-                                                    data-fullname="{{ candidate['firstname'] }} {{ candidate['lastname'] }}">
-                                                <i class="bi bi-search"></i> Platform
-                                            </button>
-                                            <img src="{{ candidate['image'] }}" height="100px" width="100px"
-                                                 class="rounded-circle" alt="Candidate Image">
-                                            <span class="cname">{{ candidate['firstname'] }} {{ candidate['lastname'] }}</span>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
+                                </p>
+                                <div id="candidate_list">
+                                    <ul class="list-group">
+                                        {% for candidate in position['candidates'] %}
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                {{ candidate['input']|safe }}
+                                                <button type="button" class="btn btn-primary btn-sm platform"
+                                                        data-platform="{{ candidate['platform'] }}"
+                                                        data-fullname="{{ candidate['firstname'] }} {{ candidate['lastname'] }}">
+                                                    <i class="bi bi-search"></i> Platform
+                                                </button>
+                                                <img src="{{ candidate['image'] }}" height="100px" width="100px"
+                                                     class="rounded-circle" alt="Candidate Image">
+                                                <span class="cname">{{ candidate['firstname'] }} {{ candidate['lastname'] }}</span>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            {% endfor %}
+            <div class="text-center">
+                <button type="button" class="btn btn-success" id="preview"><i class="bi bi-file-text"></i> Preview
+                </button>
+                <button type="submit" class="btn btn-primary" name="vote"><i class="bi bi-check-square"></i>
+                    Submit
+                </button>
             </div>
-        {% endfor %}
-        <div class="text-center">
-            <button type="button" class="btn btn-success" id="preview"><i class="bi bi-file-text"></i> Preview
-            </button>
-            <button type="submit" class="btn btn-primary" name="vote"><i class="bi bi-check-square"></i>
-                Submit
-            </button>
-        </div>
+        </form>
     </div>
 {% endblock %}
