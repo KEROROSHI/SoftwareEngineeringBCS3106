@@ -291,8 +291,6 @@ def submit_ballot():
                     positions = cursor.fetchall()
                     error = False
                     sql_array = []
-                    post = request.form.getlist(positions[0]['description'])
-                    print(post)
                     for position in positions:
                         # print(position)
                         pos_id = position['id']
@@ -321,7 +319,7 @@ def submit_ballot():
                                      (session['id'], candidate, pos_id)))
                         else:
                             print("Error")
-                            flash('Error has occurred', category='danger')
+                            flash('You must vote for at least one candidate from each position!', category='danger')
                             return redirect(url_for('ballot'))
                     if not error:
                         try:
@@ -334,11 +332,11 @@ def submit_ballot():
                             return redirect(url_for('already_voted'))
                         except Exception as e:
                             mysql_conn.rollback()  # Rollback in case of any error
-                            flash('An error occurred while submitting the ballot', category='danger')
+                            flash('An error occurred while submitting the ballot!', category='danger')
                             print("An error occurred: ", e)
                             return redirect(url_for('ballot'))
             else:
-                flash('Select candidates to vote first', category='error')
+                flash('Select candidates to vote first!', category='error')
                 return redirect(url_for('ballot'))
         return redirect(url_for('ballot'))  # Redirect to the ballot page if method is not POST
     else:
