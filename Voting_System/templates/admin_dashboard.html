@@ -36,8 +36,7 @@
                     <a class="nav-link" href="#">Features</a>
                     <a class="nav-link" href="#">Pricing</a>
                     <a class="nav-link disabled" aria-disabled="true">Welcome, {{ session['username'] }}</a>.
-                    <a class="nav-link" href="{{ url_for('logout_user') }}">Logout</a>
-
+                    <a class="nav-link" href="{{ url_for('admin_logout') }}">Logout</a>
                 </div>
             </div>
         </div>

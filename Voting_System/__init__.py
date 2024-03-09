@@ -1,6 +1,5 @@
 import mysql.connector
 from flask import Flask, flash, render_template, request, redirect, url_for, session
-from slugify import slugify
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
@@ -52,7 +51,7 @@ def admin_login():
         print(password)
         # Confirms the given password's hash value matches with the value retrieved from the database
         password_checker = checked_hashed_password(fetched_password, password)
-        if mysql_result['username'] == username and password_checker == True:
+        if mysql_result['username'] == username and password_checker is True:
             # Set session of the successfully logged-in user/admin
             session['username'] = username
             print(session['username'])
@@ -63,8 +62,8 @@ def admin_login():
     return render_template('admin_login.html')
 
 
-@app.route('/logout')
-def logout_user():
+@app.route('/admin_logout')
+def admin_logout():
     # Destroys the session that was set when the user clicks the logout button in the navbar
     session.pop('username', None)
     return redirect(url_for('admin_login'))
@@ -81,7 +80,7 @@ def admin_dashboard():
         return redirect(url_for('admin_login'))
 
 
-@app.route('/voter')
+@app.route('/voter', methods=['GET', 'POST'])
 def voter_login():
     if request.method == 'POST':
         voters_id = request.form['voters_id']
@@ -103,12 +102,21 @@ def voter_login():
             return redirect('voter_login')
         elif results['voters_id'] == voters_id and confirm_password is True:
             session['voters_id'] = voters_id
+            session['voters_name'] = results['firstname'] + ' ' + results['lastname']
             flash("You have successfully logged-in!", category='success')
-            return redirect(url_for('submit_ballot'))
+            return redirect(url_for('ballot'))
         elif not confirm_password:
             flash("Invalid Voter ID or Password!", category='danger')
             return redirect(url_for('voter_login'))
     return render_template('voter_login.html')
+
+
+@app.route('/voter_logout')
+def voter_logout():
+    # Destroys the session that was set when the user clicks the logout button in the navbar
+    session.pop('voter_id', None)
+    session.pop('voters_name', None)
+    return redirect(url_for('voter_login'))
 
 
 @app.route('/positions', methods=['GET', 'POST'])
@@ -221,34 +229,48 @@ def position_delete(position_id):
         return redirect(url_for('admin_login'))
 
 
-@app.route('/submit_ballot', methods=['POST'])
-def submit_ballot():
-    # Your code here
-    pass
-
-
 @app.route('/ballot', methods=['GET', 'POST'])
 def ballot():
     cursor = mysql_conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM votes WHERE voters_id = %s", (session['voter_id'],))
-    votes = cursor.fetchall()
-    cursor.close()
+    print(session)
 
-    if len(votes) > 0:
-        return render_template('already_voted.html')
+    if 'voters_id' in session:
+        cursor.execute("SELECT * FROM votes WHERE voters_id = %s", (session['voters_id'],))
+        votes = cursor.fetchall()
+        cursor.close()
+
+        if len(votes) > 0:
+            flash("You have already voted for this")
+            return render_template('already_voted.html')
+        else:
+            cursor = mysql_conn.cursor(dictionary=True)
+            cursor.execute("SELECT * FROM positions ORDER BY priority ASC")
+            positions = cursor.fetchall()
+            cursor.close()
+            for position in positions:
+                cursor = mysql_conn.cursor(dictionary=True)
+                cursor.execute("SELECT * FROM candidates WHERE position_id = %s", (position['id'],))
+                candidates = cursor.fetchall()
+                cursor.close()
+                for candidate in candidates:
+                    checked = ''
+                    if position['description'] in request.form:
+                        value = request.form.getlist(position['description'])
+                        if str(candidate['id']) in value:
+                            checked = 'checked'
+                    input_type = 'checkbox' if position['max_vote'] > 1 else 'radio'
+                    candidate[
+                        'input'] = f'<input type="{input_type}" class="flat-red {position["description"]}" name="{position["description"]}[]" value="{candidate["id"]}" {checked}>'
+                    candidate['image'] = candidate['photo'] if candidate[
+                        'photo'] else 'images/9691288a3fadba6a8e6173d4eea20488.jpg'
+                position['instruct'] = f'You may select up to {position["max_vote"]} candidates' if position[
+                                                                                                        'max_vote'] > 1 else 'Select only one candidate'
+                position['candidates'] = candidates
+            return render_template('ballot.html', positions=positions)
     else:
-        positions = Position.query.order_by(Position.priority.asc()).all()
-        for position in positions:
-            candidates = Candidate.query.filter_by(position_id=position.id).all()
-            for candidate in candidates:
-                slug = slugify(position.description)
-                checked = ''
-                if slug in request.form:
-                    value = request.form.getlist(slug)
-                    if candidate.id in value:
-                        checked = 'checked'
-                input_type = 'checkbox' if position.max_vote > 1 else 'radio'
-                candidate.input = f'<input type="{input_type}" class="flat-red {slug}" name="{slug}[]" value="{candidate.id}" {checked}>'
-                candidate.image = candidate.photo if candidate.photo else 'images/profile.jpg'
-            position.instruct = f'You may select up to {position.max_vote} candidates' if position.max_vote > 1 else 'Select only one candidate'
-        return render_template('ballot.html', positions=positions)
+        return redirect(url_for('voter_login'))
+
+
+@app.route('/submit_ballot', methods=['GET', 'POST'])
+def submit_ballot():
+    return render_template('base.html')
