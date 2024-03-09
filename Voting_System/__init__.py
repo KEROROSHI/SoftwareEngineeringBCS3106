@@ -280,34 +280,50 @@ def submit_ballot():
                     flash('Please vote for at least one candidate', category='danger')
                     return redirect(url_for('ballot'))
                 else:
+                    # print(request.form)
                     session['post'] = request.form
+                    # print(session)
                     cursor.execute("SELECT * FROM positions")
                     positions = cursor.fetchall()
                     error = False
                     sql_array = []
+                    post = request.form.getlist(positions[0]['description'])
+                    print(post)
                     for position in positions:
+                        # print(position)
                         pos_id = position['id']
+                        # print(position['id'])
+                        # print(position['description'])
                         if position['description'] in request.form:
+                            print(position['description'])
                             if position['max_vote'] > 1:
                                 if len(request.form.getlist(position['description'])) > position['max_vote']:
                                     error = True
+                                    # print(position['description'])
                                     flash('You can only choose ' + str(position['max_vote']) + ' candidates for ' +
                                           position['description'], category='danger')
                                 else:
                                     for candidate in request.form.getlist(position['description']):
+                                        print(candidate)
                                         sql_array.append(
-                                            ("INSERT INTO votes (voters_id, candidate_id, position_id) VALUES (%s, %s, %s)",
-                                             (session['voters_id'], candidate, pos_id)))
+                                            (
+                                            "INSERT INTO votes (voters_id, candidate_id, position_id) VALUES (%s, %s, %s)",
+                                            (session['voters_id'], candidate, pos_id)))
                             else:
                                 candidate = request.form[position['description']]
+                                print(candidate)
                                 sql_array.append(
                                     ("INSERT INTO votes (voters_id, candidate_id, position_id) VALUES (%s, %s, %s)",
                                      (session['voters_id'], candidate, pos_id)))
+                        else:
+                            print("Error")
+                            flash('Error has occurred',category='danger')
+                            return redirect(url_for('ballot'))
                     if not error:
                         try:
                             for sql_query, values in sql_array:
                                 cursor.execute(sql_query, values)
-                            mysql_conn.commit()
+                                mysql_conn.commit()
                             if 'post' in session:
                                 session.pop('post', None)
                             flash('Ballot Submitted', category='success')
