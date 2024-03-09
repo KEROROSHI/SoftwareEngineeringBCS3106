@@ -83,6 +83,31 @@ def admin_dashboard():
 
 @app.route('/voter')
 def voter_login():
+    if request.method == 'POST':
+        voters_id = request.form['voters_id']
+        password = request.form['password']
+        if voters_id is None:
+            flash("Voters ID is required", category='danger')
+            return redirect(url_for('voter_login'))
+        elif password is None:
+            flash("Password is required", category='danger')
+            return redirect(url_for('voter_login'))
+        cursor = mysql_conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM voters WHERE voters_id = %s", (voters_id,))
+        results = cursor.fetchone()
+        cursor.close()
+        print(results)
+        confirm_password = checked_hashed_password(results['password'], password)
+        if results is None:
+            flash("Voter ID does not exists!", category='danger')
+            return redirect('voter_login')
+        elif results['voters_id'] == voters_id and confirm_password is True:
+            session['voters_id'] = voters_id
+            flash("You have successfully logged-in!", category='success')
+            return redirect(url_for('submit_ballot'))
+        elif not confirm_password:
+            flash("Invalid Voter ID or Password!", category='danger')
+            return redirect(url_for('voter_login'))
     return render_template('voter_login.html')
 
 
