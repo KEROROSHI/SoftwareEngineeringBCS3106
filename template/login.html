@@ -24,7 +24,7 @@
 
 <body>
 <div class="container">
-    <form class="form mx-auto p-5" method='POST'>
+    <form class="form mx-auto p-5" method='POST' action="{{ url_for('login')}}">
 
         {% if errors %}
         <div class="alert alert-danger">
@@ -37,9 +37,9 @@
         <h1 class="text-center">Voter's Login</h1>
         <div class="mb-3">
             <label for="id" class="form-label">Voter ID</label>
-            <input type="text" class="form-control" id="id" placeholder="voter ID" name="voter_ID"
-                   value="{{ voter_ID }}">
+            <input type="text" class="form-control" id="id" placeholder="voters_id" name="voters_id" value="{{ form_data.voters_id }}">
         </div>
+        
         <div class="mb-3">
             <label for="pass" class="form-label">Password</label>
             <input type="password" class="form-control" id="pass" placeholder="password" name="password">

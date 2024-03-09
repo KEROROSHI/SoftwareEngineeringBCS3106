@@ -33,6 +33,55 @@ def generate_voter_id(length=15):
     return ''.join(random.choices(characters, k=length))
 
 
+
+@app.route('/login', methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        # Check if 'voters_id' is present in the form data
+        if 'voters_id' in request.form:
+            voters_id = request.form['voters_id']
+        else:
+            flash('Voter ID is required.', 'error')
+            return render_template("login.html", form_data=request.form, errors=['Voter ID is required.'])
+
+        password = request.form['password']
+
+        # Initialize errors array
+        errors = []
+
+        # Check if email exists and password is correct
+        cur = mysql_conn.cursor()
+        cur.execute("SELECT * FROM voters WHERE voters_id = %s", (voters_id,))
+        user = cur.fetchone()
+        cur.close()
+
+        print("Voter ID entered:", voters_id)
+        print("Password entered:", password)
+        print("User retrieved from database:", user)
+
+        if not user:
+            errors.append('Voter ID did not match our records.')
+            print("Voter ID not found in database.")
+        else:
+            stored_password = user[2]  # Accessing the password column
+            print("Stored password:", stored_password)
+            if check_password_hash(stored_password, password) == False:
+                errors.append('Incorrect password.')
+                print("Password verification failed.")
+
+        # If there are no errors, redirect to admin panel
+        if not errors:
+            return redirect(url_for('adminpanel'))
+
+        # If errors exist, flash and redirect back to login form
+        for error in errors:
+            flash(error, 'error')
+
+        # Return to login form with sticky values
+        return render_template("login.html", form_data=request.form, errors=errors)
+
+    # GET request: render login form
+    return render_template("login.html", form_data={}, errors=[])
 @app.route('/voters', methods=["GET", "POST"])
 def voters():
     if request.method == 'POST':
