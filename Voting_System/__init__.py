@@ -101,8 +101,10 @@ def voter_login():
             flash("Voter ID does not exists!", category='danger')
             return redirect('voter_login')
         elif results['voters_id'] == voters_id and confirm_password is True:
+            session['id'] = results['id']
             session['voters_id'] = voters_id
             session['voters_name'] = results['firstname'] + ' ' + results['lastname']
+            print(session)
             flash("You have successfully logged-in!", category='success')
             return redirect(url_for('ballot'))
         elif not confirm_password:
@@ -114,6 +116,7 @@ def voter_login():
 @app.route('/voter_logout')
 def voter_logout():
     # Destroys the session that was set when the user clicks the logout button in the navbar
+    session.pop('id', None)
     session.pop('voters_id', None)
     session.pop('voters_name', None)
     return redirect(url_for('voter_login'))
@@ -234,11 +237,12 @@ def ballot():
     cursor = mysql_conn.cursor(dictionary=True)
     print(session)
     if 'voters_id' in session:
-        cursor.execute("SELECT * FROM votes WHERE voters_id = %s", (session['voters_id'],))
+        cursor.execute("SELECT * FROM votes WHERE voters_id = %s", (session['id'],))
+        print(session['id'])
         votes = cursor.fetchall()
         cursor.close()
         if len(votes) > 0:
-            flash("You have already voted for this")
+            flash("You have already voted for this", category='danger')
             return redirect(url_for('already_voted'))
         else:
             cursor = mysql_conn.cursor(dictionary=True)
@@ -258,7 +262,7 @@ def ballot():
                             checked = 'checked'
                     input_type = 'checkbox' if position['max_vote'] > 1 else 'radio'
                     candidate[
-                        'input'] = f'<input type="{input_type}" class="flat-red {position["description"]}" name="{position["description"]}[]" value="{candidate["id"]}" {checked}>'
+                        'input'] = f'<input type="{input_type}" class="flat-red {position["description"]}" name="{position["description"]}" value="{candidate["id"]}" {checked}>'
                     candidate['image'] = candidate['photo'] if candidate[
                         'photo'] else url_for("static", filename="images/9691288a3fadba6a8e6173d4eea20488.jpg")
                 position['instruct'] = f'You may select up to {position["max_vote"]} candidates' if position[
@@ -280,7 +284,7 @@ def submit_ballot():
                     flash('Please vote for at least one candidate', category='danger')
                     return redirect(url_for('ballot'))
                 else:
-                    # print(request.form)
+                    print(request.form)
                     session['post'] = request.form
                     # print(session)
                     cursor.execute("SELECT * FROM positions")
@@ -295,7 +299,7 @@ def submit_ballot():
                         # print(position['id'])
                         # print(position['description'])
                         if position['description'] in request.form:
-                            print(position['description'])
+                            # print(position['description'])
                             if position['max_vote'] > 1:
                                 if len(request.form.getlist(position['description'])) > position['max_vote']:
                                     error = True
@@ -307,17 +311,17 @@ def submit_ballot():
                                         print(candidate)
                                         sql_array.append(
                                             (
-                                            "INSERT INTO votes (voters_id, candidate_id, position_id) VALUES (%s, %s, %s)",
-                                            (session['voters_id'], candidate, pos_id)))
+                                                "INSERT INTO votes (voters_id, candidate_id, position_id) VALUES (%s, %s, %s)",
+                                                (session['id'], candidate, pos_id)))
                             else:
                                 candidate = request.form[position['description']]
                                 print(candidate)
                                 sql_array.append(
                                     ("INSERT INTO votes (voters_id, candidate_id, position_id) VALUES (%s, %s, %s)",
-                                     (session['voters_id'], candidate, pos_id)))
+                                     (session['id'], candidate, pos_id)))
                         else:
                             print("Error")
-                            flash('Error has occurred',category='danger')
+                            flash('Error has occurred', category='danger')
                             return redirect(url_for('ballot'))
                     if not error:
                         try:
