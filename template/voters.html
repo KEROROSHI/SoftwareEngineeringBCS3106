@@ -44,7 +44,7 @@
                     <td>{{ voter['voters_id'] }}</td>
                     <td>
                         <a class='btn btn-primary' href='editvoter?id={{ voter["id"] }}'>Edit</a>
-                        <a href='delete?id={{ voter["id"] }}' class='btn btn-danger'>Delete</a>
+                        <a id="delete" href='delete?id={{ voter["id"] }}' class='btn btn-danger' onclick="return confirmDelete(event)">Delete</a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -107,6 +107,24 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
         crossorigin="anonymous"></script>
+
+        <script>
+            function confirmDelete(event) {
+                // Prevent the default behavior of the link
+                event.preventDefault();
+        
+                // Prompt the user for confirmation
+                const result = confirm('Are you sure you want to delete this record?');
+        
+                // If the user confirms, redirect to the delete URL
+                if (result) {
+                    window.location.href = event.target.href;
+                }
+        
+                // Return false to prevent the default action
+                return false;
+            }
+        </script>
 </body>
 
 </html>
