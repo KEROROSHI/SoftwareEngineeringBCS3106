@@ -270,54 +270,59 @@ def ballot():
         return redirect(url_for('voter_login'))
 
 
-@app.route('/submit_ballot', methods=['GET', 'POST'])
+@app.route('/submit_ballot', methods=['POST'])
 def submit_ballot():
-    if request.method == 'POST':
-        cursor = mysql_conn.cursor(dictionary=True)
-        if 'vote' in request.form:
-            if len(request.form) == 1:
-                flash('Please vote for at least one candidate', category='danger')
-                return redirect(url_for('ballot'))
-            else:
-                session['post'] = request.form
-                cursor.execute("SELECT * FROM positions")
-                positions = cursor.fetchall()
-                error = False
-                sql_array = []
-                for position in positions:
-                    pos_id = position['id']
-                    if position['description'] in request.form:
-                        if position['max_vote'] > 1:
-                            if len(request.form.getlist(position['description'])) > position['max_vote']:
-                                error = True
-                                flash(
-                                    'You can only choose ' + str(position['max_vote']) + ' candidates for ' + position[
-                                        'description'], category='danger')
-                                return redirect(url_for('ballot'))
+    if 'voters_id' in session:
+        if request.method == 'POST':
+            cursor = mysql_conn.cursor(dictionary=True)
+            if 'vote' in request.form:
+                if len(request.form) == 1:
+                    flash('Please vote for at least one candidate', category='danger')
+                    return redirect(url_for('ballot'))
+                else:
+                    session['post'] = request.form
+                    cursor.execute("SELECT * FROM positions")
+                    positions = cursor.fetchall()
+                    error = False
+                    sql_array = []
+                    for position in positions:
+                        pos_id = position['id']
+                        if position['description'] in request.form:
+                            if position['max_vote'] > 1:
+                                if len(request.form.getlist(position['description'])) > position['max_vote']:
+                                    error = True
+                                    flash('You can only choose ' + str(position['max_vote']) + ' candidates for ' +
+                                          position['description'], category='danger')
+                                else:
+                                    for candidate in request.form.getlist(position['description']):
+                                        sql_array.append(
+                                            ("INSERT INTO votes (voters_id, candidate_id, position_id) VALUES (%s, %s, %s)",
+                                             (session['voters_id'], candidate, pos_id)))
                             else:
-                                for candidate in request.form.getlist(position['description']):
-                                    sql_array.append(
-                                        "INSERT INTO votes (voters_id, candidate_id, position_id) VALUES ('" + str(
-                                            session['voters_id']) + "', '" + str(candidate) + "', '" + str(
-                                            pos_id) + "')")
-                        else:
-                            candidate = request.form[position['description']]
-                            sql_array.append("INSERT INTO votes (voters_id, candidate_id, position_id) VALUES ('" + str(
-                                session['voters_id']) + "', '" + str(candidate) + "', '" + str(pos_id) + "')")
-                if not error:
-                    for sql_row in sql_array:
+                                candidate = request.form[position['description']]
+                                sql_array.append(
+                                    ("INSERT INTO votes (voters_id, candidate_id, position_id) VALUES (%s, %s, %s)",
+                                     (session['voters_id'], candidate, pos_id)))
+                    if not error:
                         try:
-                            cursor.execute(sql_row)
+                            for sql_query, values in sql_array:
+                                cursor.execute(sql_query, values)
+                            mysql_conn.commit()
+                            if 'post' in session:
+                                session.pop('post', None)
+                            flash('Ballot Submitted', category='success')
+                            return redirect(url_for('already_voted'))
                         except Exception as e:
+                            mysql_conn.rollback()  # Rollback in case of any error
+                            flash('An error occurred while submitting the ballot', category='danger')
                             print("An error occurred: ", e)
-                    if 'post' in session:
-                        session.pop('post', None)
-                    flash('Ballot Submitted', category='success')
-                    return redirect(url_for('already_voted'))
-        else:
-            flash('Select candidates to vote first', category='error')
-            return redirect(url_for('ballot'))
-    return redirect(url_for('ballot'))
+                            return redirect(url_for('ballot'))
+            else:
+                flash('Select candidates to vote first', category='error')
+                return redirect(url_for('ballot'))
+        return redirect(url_for('ballot'))  # Redirect to the ballot page if method is not POST
+    else:
+        return redirect(url_for('voter_login'))  # Redirect to the login page if voters_id is not in session
 
 
 @app.route('/ballot/already_voted')
