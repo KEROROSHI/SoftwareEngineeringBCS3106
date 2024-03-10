@@ -35,6 +35,10 @@
     <div class="container-fluid" style="display: grid; grid-template-columns: 1fr 1fr">
         <div>
             <a class="navbar-brand" href="#">Voting System</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
@@ -63,6 +67,7 @@
             </div>
         </div>
     </nav>#}
+
 <div class="d-flex align-items-start text-center" id="sidebar">
     <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
         <h4 class="header">REPORTS</h4>
@@ -88,6 +93,18 @@
             Title
         </a>
     </div>
+</div>
+<div style="margin-left: 120px">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 </div>
 {% block content %}
     <h1>Hello, {% if 'username' in session or 'voters_name' in session %}{{ session['voters_name'] }}{% else %}

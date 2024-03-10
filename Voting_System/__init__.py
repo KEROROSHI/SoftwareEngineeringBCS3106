@@ -57,36 +57,45 @@ def get_voters_voted_count(cursor):
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin_login():
-    if request.method == 'POST':
-        # Takes the data from the form
-        username = request.form['username']
-        password = request.form['password']
-        # Fetches the user data form the database
-        cursor = mysql_conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM admin WHERE username = %s", (username,))
-        mysql_result = cursor.fetchone()
-        print(mysql_result)
-        cursor.close()
+    print(session)
+    if 'voters_id' not in session or 'id' not in session or 'voters_name' not in session:
+        if 'username' not in session:
+            if request.method == 'POST':
+                # Takes the data from the form
+                username = request.form['username']
+                password = request.form['password']
+                # Fetches the user data form the database
+                cursor = mysql_conn.cursor(dictionary=True)
+                cursor.execute("SELECT * FROM admin WHERE username = %s", (username,))
+                mysql_result = cursor.fetchone()
+                print(mysql_result)
+                cursor.close()
 
-        if mysql_result is None:
-            # Handle case where no admin with the provided username exists
-            flash("User does not exist")
-            return redirect(url_for('admin_login'))
+                if mysql_result is None:
+                    # Handle case where no admin with the provided username exists
+                    flash("User does not exist")
+                    return redirect(url_for('admin_login'))
 
-        fetched_password = mysql_result['password']
-        print(fetched_password)
-        print(password)
-        # Confirms the given password's hash value matches with the value retrieved from the database
-        password_checker = checked_hashed_password(fetched_password, password)
-        if mysql_result['username'] == username and password_checker is True:
-            # Set session of the successfully logged-in user/admin
-            session['username'] = username
-            print(session['username'])
-            return redirect(url_for('admin_dashboard'))
+                fetched_password = mysql_result['password']
+                print(fetched_password)
+                print(password)
+                # Confirms the given password's hash value matches with the value retrieved from the database
+                password_checker = checked_hashed_password(fetched_password, password)
+                if mysql_result['username'] == username and password_checker is True:
+                    # Set session of the successfully logged-in user/admin
+                    session['username'] = username
+                    print(session['username'])
+                    return redirect(url_for('admin_dashboard'))
+                else:
+                    flash("Invalid username or password", category='danger')
+                    return redirect(url_for('admin_login'))
+            return render_template('admin_login.html')
         else:
-            flash("Invalid username or password", category='danger')
-            return redirect(url_for('admin_login'))
-    return render_template('admin_login.html')
+            flash("You are already logged-in!", category='info')
+            return redirect(url_for('admin_dashboard'))
+    else:
+        flash("You must log out as a voter to log in as an Administrator!", category='danger')
+        return redirect(url_for('voter_login'))
 
 
 @app.route('/admin_logout')
@@ -104,7 +113,7 @@ def admin_dashboard():
 
         return render_template('admin_dashboard.html')
     else:
-        flash("You must be logged in as an administrator to access that page!", category='danger')
+        flash("You must be logged in as an Administrator to access that page!", category='danger')
         return redirect(url_for('admin_login'))
 
 
@@ -127,35 +136,44 @@ def dashboard():
 
 @app.route('/voter', methods=['GET', 'POST'])
 def voter_login():
-    if request.method == 'POST':
-        voters_id = request.form['voters_id']
-        password = request.form['password']
-        if voters_id is None:
-            flash("Voters ID is required", category='danger')
-            return redirect(url_for('voter_login'))
-        elif password is None:
-            flash("Password is required", category='danger')
-            return redirect(url_for('voter_login'))
-        cursor = mysql_conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM voters WHERE voters_id = %s", (voters_id,))
-        results = cursor.fetchone()
-        cursor.close()
-        print(results)
-        confirm_password = checked_hashed_password(results['password'], password)
-        if results is None:
-            flash("Voter ID does not exists!", category='danger')
-            return redirect('voter_login')
-        elif results['voters_id'] == voters_id and confirm_password is True:
-            session['id'] = results['id']
-            session['voters_id'] = voters_id
-            session['voters_name'] = results['firstname'] + ' ' + results['lastname']
-            print(session)
-            flash("You have successfully logged-in!", category='success')
+    print(session)
+    if 'username' not in session:
+        if 'voters_id' not in session or 'id' not in session or 'voters_name' not in session:
+            if request.method == 'POST':
+                voters_id = request.form['voters_id']
+                password = request.form['password']
+                if voters_id is None:
+                    flash("Voters ID is required", category='danger')
+                    return redirect(url_for('voter_login'))
+                elif password is None:
+                    flash("Password is required", category='danger')
+                    return redirect(url_for('voter_login'))
+                cursor = mysql_conn.cursor(dictionary=True)
+                cursor.execute("SELECT * FROM voters WHERE voters_id = %s", (voters_id,))
+                results = cursor.fetchone()
+                cursor.close()
+                print(results)
+                confirm_password = checked_hashed_password(results['password'], password)
+                if results is None:
+                    flash("Voter ID does not exists!", category='danger')
+                    return redirect('voter_login')
+                elif results['voters_id'] == voters_id and confirm_password is True:
+                    session['id'] = results['id']
+                    session['voters_id'] = voters_id
+                    session['voters_name'] = results['firstname'] + ' ' + results['lastname']
+                    print(session)
+                    flash("You have successfully logged-in!", category='success')
+                    return redirect(url_for('ballot'))
+                elif not confirm_password:
+                    flash("Invalid Voter ID or Password!", category='danger')
+                    return redirect(url_for('voter_login'))
+            return render_template('voter_login.html')
+        else:
+            flash("You are already logged in!", category='info')
             return redirect(url_for('ballot'))
-        elif not confirm_password:
-            flash("Invalid Voter ID or Password!", category='danger')
-            return redirect(url_for('voter_login'))
-    return render_template('voter_login.html')
+    else:
+        flash("You must log out as an Administrator to log in as a Voter!", category='danger')
+        return redirect(url_for('admin_login'))
 
 
 @app.route('/voter_logout')

@@ -17,8 +17,10 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-link disabled" aria-disabled="true">{{ session['voters_name'] }}</a>
-                <a class="nav-link" href="{{ url_for('voter_logout') }}">Logout</a>
+                {% if 'username' in session or 'voters_name' in session %}
+                    <a class="nav-link disabled" aria-disabled="true">{{ session['voters_name'] }}</a>
+                    <a class="nav-link" href="{{ url_for('voter_logout') }}">Logout</a>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -28,7 +30,7 @@
         User{% endif %}</h1>
     {% if 'username' in session or 'voters_name' in session %}
         <a class="nav-link" href="{{ url_for('voter_logout') }}">Logout</a>
-    {% else %}g
+    {% else %}
         <a class="nav-link" href="{{ url_for('voter_login') }}">Are you a Voter?</a>
         <a class="nav-link" href="{{ url_for('admin_login') }}">Are you an Admin?</a>
     {% endif %}
