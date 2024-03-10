@@ -1,6 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
-from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import hashlib
 import random
@@ -13,7 +11,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = 'your_secret_key'
 app.config['SECRET_KEY'] = "8939e180f759844a0a5d0947"
-
 
 # MySQL configurations
 mysql_conn = mysql.connector.connect(
@@ -354,9 +351,6 @@ def delete_candidate():
             flash(f'Error deleting candidate: {str(e)}', 'danger')
         finally:
             return redirect(url_for('candidates'))
-
-
-
 
 
 @app.route('/')
