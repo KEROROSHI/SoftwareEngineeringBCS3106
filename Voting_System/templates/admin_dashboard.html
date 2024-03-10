@@ -4,5 +4,66 @@
     Dashboard
 {% endblock %}
 {% block content %}
+    <style>
+        .container {
+            margin-left: 120px;
+        }
+    </style>
+    <div class="container">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Voting Statistics</h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Display statistics such as total votes, voter turnout, etc. -->
+                            <p>Total Votes: 500</p>
+                            <p>Voter Turnout: 70%</p>
+                            <p>Top Voted Candidates:</p>
+                            <ul>
+                                <li>Candidate A: 250 votes</li>
+                                <li>Candidate B: 180 votes</li>
+                                <li>Candidate C: 70 votes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Recent Activities</h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Display recent activities related to the voting process -->
+                            <ul class="list-group">
+                                <li class="list-group-item">Voter John Doe cast a vote</li>
+                                <li class="list-group-item">New candidate registered - Candidate X</li>
+                                <li class="list-group-item">Voter Mary Smith updated her vote</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Voting Controls</h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Provide controls for managing the voting process -->
+                            <a href="#" class="btn btn-primary">Start New Voting Session</a>
+                            <a href="#" class="btn btn-danger">End Current Voting Session</a>
+                            <a href="#" class="btn btn-warning">Reset Votes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
