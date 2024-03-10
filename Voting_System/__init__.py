@@ -285,6 +285,7 @@ def ballot():
         cursor.execute("SELECT * FROM votes WHERE voters_id = %s", (session['id'],))
         print(session['id'])
         votes = cursor.fetchall()
+        print(votes)
         cursor.close()
         if len(votes) > 0:
             flash("You have already voted for this", category='danger')

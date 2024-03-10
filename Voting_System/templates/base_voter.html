@@ -8,6 +8,21 @@
     <title>{% block title %}Base{% endblock %}</title>
 </head>
 <body>
+<nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark" style="z-index: 1">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Voting System</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link disabled" aria-disabled="true">{{ session['voters_name'] }}</a>
+                <a class="nav-link" href="{{ url_for('voter_logout') }}">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
 {% block content %}
     <h1>Hello, {% if 'username' in session or 'voters_name' in session %}{{ session['voters_name'] }}{% else %}
         User{% endif %}</h1>
