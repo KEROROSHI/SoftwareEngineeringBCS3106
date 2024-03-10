@@ -1,9 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'base_admin.html' %}
 {% block content %}
     <div class="container">
-        <button class="btn btn-primary" type="button" onclick="">Create New Position</button>
-        <br>
-        <table class="table table-dark table-hover">
+        <a class="btn btn-primary" href="{{ url_for('position_create') }}" type="button">Create New Position</a>
+        <table class="table table-secondary table-hover" style="margin-top: 30px">
             <thead>
             <tr>
                 <th scope="col">Position</th>

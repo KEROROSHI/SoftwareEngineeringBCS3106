@@ -15,7 +15,7 @@ mysql_conn = mysql.connector.connect(
 
 @app.route('/')
 def hello_world():
-    return render_template('base.html')
+    return render_template('base_voter.html')
 
 
 def hash_password(password):  # Function to hash the given password when creating a user
@@ -26,6 +26,33 @@ def hash_password(password):  # Function to hash the given password when creatin
 def checked_hashed_password(fetched_password,
                             attempted_password):  # Function to compare hashed password to the given password
     return check_password_hash(fetched_password, attempted_password)
+
+
+def get_positions_count(cursor):
+    sql = "SELECT COUNT(*) FROM positions"
+    cursor.execute(sql)
+    return cursor.fetchone()[0]
+
+
+# Function to get the count of candidates from the database
+def get_candidates_count(cursor):
+    sql = "SELECT COUNT(*) FROM candidates"
+    cursor.execute(sql)
+    return cursor.fetchone()[0]
+
+
+# Function to get the count of voters from the database
+def get_voters_count(cursor):
+    sql = "SELECT COUNT(*) FROM voters"
+    cursor.execute(sql)
+    return cursor.fetchone()[0]
+
+
+# Function to get the count of voters who voted from the database
+def get_voters_voted_count(cursor):
+    sql = "SELECT COUNT(DISTINCT voters_id) FROM votes"
+    cursor.execute(sql)
+    return cursor.fetchone()[0]
 
 
 @app.route('/admin', methods=['GET', 'POST'])
@@ -74,10 +101,28 @@ def admin_dashboard():
     print(session)
     # Checks if the admin is logged-in in order to access the page
     if 'username' in session:
+
         return render_template('admin_dashboard.html')
     else:
         flash("You must be logged in as an administrator to access that page!", category='danger')
         return redirect(url_for('admin_login'))
+
+
+@app.route('/dashboard')
+def dashboard():
+    # Establish database connection
+    cursor = mysql_conn.cursor()
+
+    # Execute SQL queries
+    positions_count = get_positions_count(cursor)
+    candidates_count = get_candidates_count(cursor)
+    voters_count = get_voters_count(cursor)
+    voters_voted_count = get_voters_voted_count(cursor)
+
+    # Close database connection
+    cursor.close()
+    return render_template('dashboard.html', positions_count=positions_count, candidates_count=candidates_count,
+                           voters_count=voters_count, voters_voted_count=voters_voted_count)
 
 
 @app.route('/voter', methods=['GET', 'POST'])

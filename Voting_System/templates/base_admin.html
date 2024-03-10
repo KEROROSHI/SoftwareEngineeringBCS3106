@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <title>{% block title %}Base{% endblock %}</title>
+</head>
+<body>
+<style>
+    #sidebar {
+        position: absolute;
+        background-color: #212121;
+        top: 0;
+        left: 0;
+        padding-top: 80px;
+        min-height: 100%;
+        width: 120px;
+        -webkit-transition: -webkit-transform .3s ease-in-out, width .3s ease-in-out;
+        -moz-transition: -moz-transform .3s ease-in-out, width .3s ease-in-out;
+        -o-transition: -o-transform .3s ease-in-out, width .3s ease-in-out;
+        transition: transform .3s ease-in-out, width .3s ease-in-out;
+    }
+
+    .header {
+        color: white;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+</style>
+<nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark" style="z-index: 1">
+    <div class="container-fluid" style="display: grid; grid-template-columns: 1fr 1fr">
+        <div>
+            <a class="navbar-brand" href="#">Voting System</a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link disabled" aria-disabled="true">Welcome, {{ session['username'] }}</a>
+                <a class="nav-link" href="{{ url_for('admin_logout') }}">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
+{#<nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark" style="z-index: 1">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link">Welcome, {{ session['username'] }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_logout') }}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>#}
+<div class="d-flex align-items-start text-center" id="sidebar">
+    <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <h4 class="header">REPORTS</h4>
+        <a class="nav-link" href="{{ url_for('dashboard') }}" type="button" role="tab" aria-selected="true"><i
+                class="fa fa-dashboard"></i><br>Dashboard
+        </a>
+        <h4 class="header">MANAGE</h4>
+        <a class="nav-link" href="{#{{ url_for('#') }}#}#" type="button" role="tab" aria-selected="true"><i
+                class="fa fa-users"></i><br>Voters
+        </a>
+        <a class="nav-link" href="{{ url_for('positions') }}" type="button" role="tab" aria-selected="true"><i
+                class="fa fa-tasks"></i><br>Positions
+        </a>
+        <a class="nav-link" href="{#{{ url_for('candidates') }}#}#" type="button" role="tab" aria-selected="true"><i
+                class="fa fa-black-tie"></i><br>Candidates
+        </a>
+        <h4 class="header">SETTINGS</h4>
+        <a class="nav-link" href="{#{{ url_for('ballot_position') }}#}#" type="button" role="tab"
+           aria-selected="true"><i
+                class="fa fa-file-text"></i><br>Ballot Position
+        </a>
+        <a class="nav-link" href="#" type="button" role="tab" aria-selected="true"><i class="fa fa-cog"></i><br>Election
+            Title
+        </a>
+    </div>
+</div>
+{% block content %}
+    <h1>Hello, {% if 'username' in session or 'voters_name' in session %}{{ session['voters_name'] }}{% else %}
+        User{% endif %}</h1>
+    {% if 'username' in session or 'voters_name' in session %}
+        <a class="nav-link" href="{{ url_for('voter_logout') }}">Logout</a>
+    {% else %}g
+        <a class="nav-link" href="{{ url_for('voter_login') }}">Are you a Voter?</a>
+        <a class="nav-link" href="{{ url_for('admin_login') }}">Are you an Admin?</a>
+    {% endif %}
+{% endblock %}
+</body>
+<script>
+    window.onload = function () {
+        const resetButtons = document.querySelectorAll('.reset');
+        resetButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                const positionDesc = this.getAttribute('data-desc');
+                const inputs = document.querySelectorAll('input[name="' + positionDesc + '[]"]');
+                inputs.forEach(function (input) {
+                    input.checked = false;
+                });
+            });
+        });
+    };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<script src='https://kit.fontawesome.com/ced143f66d.js' crossorigin="anonymous"></script>
+</html>
