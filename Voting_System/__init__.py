@@ -26,6 +26,43 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
+def hash_password(password):  # Function to hash the given password when creating a user
+    hashed_password = generate_password_hash(password)
+    return hashed_password
+
+
+def checked_hashed_password(fetched_password,
+                            attempted_password):  # Function to compare hashed password to the given password
+    return check_password_hash(fetched_password, attempted_password)
+
+
+def get_positions_count(cursor):
+    sql = "SELECT COUNT(*) FROM positions"
+    cursor.execute(sql)
+    return cursor.fetchone()[0]
+
+
+# Function to get the count of candidates from the database
+def get_candidates_count(cursor):
+    sql = "SELECT COUNT(*) FROM candidates"
+    cursor.execute(sql)
+    return cursor.fetchone()[0]
+
+
+# Function to get the count of voters from the database
+def get_voters_count(cursor):
+    sql = "SELECT COUNT(*) FROM voters"
+    cursor.execute(sql)
+    return cursor.fetchone()[0]
+
+
+# Function to get the count of voters who voted from the database
+def get_voters_voted_count(cursor):
+    sql = "SELECT COUNT(DISTINCT voters_id) FROM votes"
+    cursor.execute(sql)
+    return cursor.fetchone()[0]
+
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -43,54 +80,32 @@ def check_password(password, hashed_password):
     return check_password_hash(hashed_password, password)
 
 
-# @app.route('/login', methods=["GET", "POST"])
-# def login():
-#     if request.method == "POST":
-#         # Check if 'voters_id' is present in the form data
-#         if 'voters_id' in request.form:
-#             voters_id = request.form['voters_id']
-#         else:
-#             flash('Voter ID is required.', 'error')
-#             return render_template("login.html", form_data=request.form, errors=['Voter ID is required.'])
-#
-#         password = request.form['password']
-#
-#         # Initialize errors array
-#         errors = []
-#
-#         # Check if email exists and password is correct
-#         cur = mysql_conn.cursor()
-#         cur.execute("SELECT * FROM voters WHERE voters_id = %s", (voters_id,))
-#         user = cur.fetchone()
-#         cur.close()
-#
-#         print("Voter ID entered:", voters_id)
-#         print("Password entered:", password)
-#         print("User retrieved from database:", user)
-#
-#         if not user:
-#             errors.append('Voter ID did not match our records.')
-#             print("Voter ID not found in database.")
-#         else:
-#             stored_password = user[2]  # Accessing the password column
-#             print("Stored password:", stored_password)
-#             if not check_password(password, stored_password):
-#                 errors.append('Incorrect password.')
-#                 print("Password verification failed.")
-#
-#         # If there are no errors, redirect to admin panel
-#         if not errors:
-#             return redirect(url_for('voters'))
-#
-#         # If errors exist, flash and redirect back to login form
-#         for error in errors:
-#             flash(error, 'error')
-#
-#         # Return to login form with sticky values
-#         return render_template("login.html", form_data=request.form, errors=errors)
-#
-#     # GET request: render login form
-#     return render_template("login.html", form_data={}, errors=[])
+def get_total_votes(cursor):
+    sql = "SELECT COUNT(*) from votes"
+    cursor.execute(sql)
+    return cursor.fetchone()[0]
+
+
+def get_top_candidates(cursor):
+    sql = "SELECT c.firstname, c.lastname, COUNT(*) as votes_count FROM votes v JOIN candidates c ON v.candidate_id = c.id GROUP BY v.candidate_id ORDER BY votes_count DESC LIMIT 3"
+    cursor.execute(sql)
+    return cursor.fetchall()
+
+
+def get_voter_turnout(cursor):
+    total_voters = get_voters_count(cursor)
+    voters_voted = get_voters_voted_count(cursor)
+
+    if total_voters == 0:
+        return 0
+
+    turnout_percentage = (voters_voted / total_voters) * 100
+    return turnout_percentage
+
+
+@app.route('/')
+def hello_world():
+    return render_template('voterslandingpage.html')
 
 
 @app.route('/admin/voters', methods=["GET", "POST"])
@@ -106,7 +121,7 @@ def voters():
 
             # If the user does not select a file, the browser submits an empty file without a filename.
             if file.filename == '':
-                flash('No selected file',category='danger')
+                flash('No selected file', category='danger')
                 return redirect(request.url)
 
             if file and allowed_file(file.filename):
@@ -244,13 +259,13 @@ def candidates():
     if 'username' in session:
         if request.method == 'POST':
             if 'image' not in request.files:
-                flash('No file part',category='danger')
+                flash('No file part', category='danger')
                 return redirect(request.url)
 
             file = request.files['image']
 
             if file.filename == '':
-                flash('No selected file',category='danger')
+                flash('No selected file', category='danger')
                 return redirect(request.url)
 
             if file and allowed_file(file.filename):
@@ -377,48 +392,6 @@ def delete_candidate():
         return redirect(url_for('admin_login'))
 
 
-@app.route('/')
-def hello_world():
-    return render_template('voterslandingpage.html')
-
-
-def hash_password(password):  # Function to hash the given password when creating a user
-    hashed_password = generate_password_hash(password)
-    return hashed_password
-
-
-def checked_hashed_password(fetched_password,
-                            attempted_password):  # Function to compare hashed password to the given password
-    return check_password_hash(fetched_password, attempted_password)
-
-
-def get_positions_count(cursor):
-    sql = "SELECT COUNT(*) FROM positions"
-    cursor.execute(sql)
-    return cursor.fetchone()[0]
-
-
-# Function to get the count of candidates from the database
-def get_candidates_count(cursor):
-    sql = "SELECT COUNT(*) FROM candidates"
-    cursor.execute(sql)
-    return cursor.fetchone()[0]
-
-
-# Function to get the count of voters from the database
-def get_voters_count(cursor):
-    sql = "SELECT COUNT(*) FROM voters"
-    cursor.execute(sql)
-    return cursor.fetchone()[0]
-
-
-# Function to get the count of voters who voted from the database
-def get_voters_voted_count(cursor):
-    sql = "SELECT COUNT(DISTINCT voters_id) FROM votes"
-    cursor.execute(sql)
-    return cursor.fetchone()[0]
-
-
 @app.route('/admin_login', methods=['GET', 'POST'])
 def admin_login():
     print(session)
@@ -475,7 +448,14 @@ def admin_dashboard():
     print(session)
     # Checks if the admin is logged-in in order to access the page
     if 'username' in session:
-        return render_template('admin_dashboard.html')
+        cursor_non_dict = mysql_conn.cursor()
+        cursor = mysql_conn.cursor(dictionary=True)
+        voter_turnout = get_voter_turnout(cursor_non_dict)
+        total_votes = get_total_votes(cursor_non_dict)
+        top_candidates = get_top_candidates(cursor)
+        print(top_candidates)
+        return render_template('admin_dashboard.html', top_candidates=top_candidates, total_votes=total_votes,
+                               voter_turnout=voter_turnout)
     else:
         flash("You must be logged in as an Administrator to access that page!", category='danger')
         return redirect(url_for('admin_login'))

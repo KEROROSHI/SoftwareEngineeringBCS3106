@@ -19,13 +19,14 @@
                         </div>
                         <div class="card-body">
                             <!-- Display statistics such as total votes, voter turnout, etc. -->
-                            <p>Total Votes: 500</p>
-                            <p>Voter Turnout: 70%</p>
+                            <p>Total Votes: {{ total_votes }}</p>
+                            <p>Voter Turnout: {{ voter_turnout }}%</p>
                             <p>Top Voted Candidates:</p>
                             <ul>
-                                <li>Candidate A: 250 votes</li>
-                                <li>Candidate B: 180 votes</li>
-                                <li>Candidate C: 70 votes</li>
+                                {% for candidate in top_candidates %}
+                                    <li>{{ candidate['firstname'] }} {{ candidate['lastname'] }} - Votes
+                                        Count: {{ candidate['votes_count'] }}</li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>
