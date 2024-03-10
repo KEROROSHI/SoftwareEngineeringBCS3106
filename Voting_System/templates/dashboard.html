@@ -1,0 +1,59 @@
+{% extends 'base_admin.html' %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="bg-secondary text-white rounded p-3">
+                    <div class="inner">
+                        <p class="h5">No. of Positions</p>
+                        <h3>{{ positions_count }}</h3>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <a href="{{ url_for('positions') }}" class="text-white text-decoration-none">More info <i
+                            class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="bg-secondary text-white rounded p-3">
+                    <div class="inner">
+                        <p class="h5">No. of Candidates</p>
+                        <h3>{{ candidates_count }}</h3>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <a href="{{ url_for('candidates') }}" class="text-white text-decoration-none">More info <i
+                            class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="bg-secondary text-white rounded p-3">
+                    <div class="inner">
+                        <p class="h5">Total Voters</p>
+                        <h3>{{ voters_count }}</h3>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <a href="{{ url_for('voters') }}" class="text-white text-decoration-none">More info <i
+                            class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="bg-secondary text-white rounded p-3">
+                    <div class="inner">
+                        <p class="h5">Voters Voted</p>
+                        <h3>{{ voters_voted_count }}</h3>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <a href="#" class="text-white text-decoration-none">More info <i
+                            class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

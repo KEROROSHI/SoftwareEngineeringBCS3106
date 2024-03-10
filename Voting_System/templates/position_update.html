@@ -1,0 +1,33 @@
+{% extends 'base_admin.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+    <style>
+        .container {
+            margin-top: 100px;
+            width: 1000px;
+        }
+
+        a {
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+    <div class="container">
+        <form method="post" action="{{ url_for('position_update', position_id=position_id) }}">
+            <a class="back" onclick="history.back()">&#8249; Back</a>
+            <h2>Update Position</h2>
+            <div class="mb-3">
+                <label for="position_name" class="form-label">Position Name</label>
+                <input type="text" class="form-control" id="position_name" name="position_name"
+                       value="{{ position_name }}">
+            </div>
+            <div class="mb-3">
+                <label for="max_votes" class="form-label">Maximum Vote</label>
+                <input type="number" class="form-control" id="max_votes" name="max_votes"
+                       value="{{ max_votes }}">
+            </div>
+            <input type="hidden" name="position_id" value="{{ position_id }}">
+            <button type="submit" class="btn btn-primary" style="margin-top: 10px">Submit</button>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base_admin.html' %}
+{% block title %}
+    Dashboard
+{% endblock %}
+{% block content %}
+{#<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Edit Voter</title>
+</head>
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        form {
+            width: 500px;
+        }
+    </style>#}
+    <style>
+        .container {
+            margin-top: 100px;
+            width: 1000px;
+        }
+
+        a {
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+    <div class="container">
+        <form action="/editvoter" method="POST" class="mx-auto">
+            <a class="back" onclick="history.back()">&#8249; Back</a>
+            <h1 class="text-center">Edit Voter</h1>
+            <!-- Hidden input field to store voter ID -->
+            <input type="hidden" name="id" value="{{ voter.id }}">
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="firstname" class="form-label">First Name</label>
+                    <input type="text" class="form-control" placeholder="First name" aria-label="First name"
+                           name="firstname" value="{{ voter.firstname }}" required>
+                </div>
+                <div class="col">
+                    <label for="position_name" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" placeholder="Last name" aria-label="Last name"
+                           name="lastname" value="{{ voter.lastname }}" required>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="voter_id" class="form-label">Voter ID</label>
+                    <input type="text" class="form-control" placeholder="Voter ID" aria-label="Voter ID" name="voter_id"
+                           value="{{ voter.voters_id }}" required>
+                </div>
+            </div>
+            <button class="btn btn-success">Update</button>
+        </form>
+    </div>
+{% endblock %}
