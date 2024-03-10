@@ -33,6 +33,64 @@ def generate_voter_id(length=15):
     return ''.join(random.choices(characters, k=length))
 
 
+def hashed_password(password):
+    return generate_password_hash(password)
+
+
+def check_password(password, hashed_password):
+    return check_password_hash(hashed_password, password)
+
+
+@app.route('/login', methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        # Check if 'voters_id' is present in the form data
+        if 'voters_id' in request.form:
+            voters_id = request.form['voters_id']
+        else:
+            flash('Voter ID is required.', 'error')
+            return render_template("login.html", form_data=request.form, errors=['Voter ID is required.'])
+
+        password = request.form['password']
+
+        # Initialize errors array
+        errors = []
+
+        # Check if email exists and password is correct
+        cur = mysql_conn.cursor()
+        cur.execute("SELECT * FROM voters WHERE voters_id = %s", (voters_id,))
+        user = cur.fetchone()
+        cur.close()
+
+        print("Voter ID entered:", voters_id)
+        print("Password entered:", password)
+        print("User retrieved from database:", user)
+
+        if not user:
+            errors.append('Voter ID did not match our records.')
+            print("Voter ID not found in database.")
+        else:
+            stored_password = user[2]  # Accessing the password column
+            print("Stored password:", stored_password)
+            if not check_password(password, stored_password):
+                errors.append('Incorrect password.')
+                print("Password verification failed.")
+
+        # If there are no errors, redirect to admin panel
+        if not errors:
+            return redirect(url_for('voters'))
+
+        # If errors exist, flash and redirect back to login form
+        for error in errors:
+            flash(error, 'error')
+
+        # Return to login form with sticky values
+        return render_template("login.html", form_data=request.form, errors=errors)
+
+    # GET request: render login form
+    return render_template("login.html", form_data={}, errors=[])
+
+
 @app.route('/voters', methods=["GET", "POST"])
 def voters():
     if request.method == 'POST':
@@ -64,8 +122,8 @@ def voters():
             lastname = request.form['lastname']
             password = request.form['password']
 
-            # Hash the password
-            hashed_password = generate_password_hash(password)
+            # Hash the password using the function
+            hashed_pass = hashed_password(password)
 
             # Generate voter ID
             voter_id = generate_voter_id()
@@ -75,7 +133,7 @@ def voters():
                 cursor = mysql_conn.cursor()
                 # Create a new record
                 sql = "INSERT INTO `voters` (`voters_id`, `password`, `firstname`, `lastname`, `photo`) VALUES (%s, %s, %s, %s, %s)"
-                cursor.execute(sql, (voter_id, hashed_password, firstname, lastname, random_filename))
+                cursor.execute(sql, (voter_id, hashed_pass, firstname, lastname, random_filename))
                 mysql_conn.commit()
                 cursor.close()
             except mysql.connector.Error as e:
