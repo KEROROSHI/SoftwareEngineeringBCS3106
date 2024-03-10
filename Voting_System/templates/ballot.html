@@ -40,7 +40,8 @@
                                                         data-fullname="{{ candidate['firstname'] }} {{ candidate['lastname'] }}">
                                                     <i class="bi bi-search"></i> Platform
                                                 </button>
-                                                <img src="{{ candidate['image'] }}" height="100px" width="100px"
+                                                <img src="{{ url_for('static', filename='images/' + candidate.photo) }}"
+                                                     height="100px" width="100px"
                                                      class="rounded-circle" alt="Candidate Image">
                                                 <span class="cname">{{ candidate['firstname'] }} {{ candidate['lastname'] }}</span>
                                             </li>

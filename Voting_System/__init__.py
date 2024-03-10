@@ -20,7 +20,7 @@ mysql_conn = mysql.connector.connect(
     database="votingsystem"
 )
 
-UPLOAD_FOLDER = 'static/images/'
+UPLOAD_FOLDER = 'Voting_System/static/images/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER

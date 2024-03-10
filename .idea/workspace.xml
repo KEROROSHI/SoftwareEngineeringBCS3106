@@ -5,22 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="64dbc12f-db02-4fb0-bf89-350379c721fb" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Voting_System/static/images/80c8a4ae60e2bfaf7a532e92f6731efb.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Voting_System/static/images/a2bee32d11ff59e31f9b0cc0b483f902.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Voting_System/static/images/d2f4704dffa8ff909e7aac1bc0ef52ce.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/images/80c8a4ae60e2bfaf7a532e92f6731efb.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Voting_System/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/templates/admin_dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/admin_dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/templates/ballot_position.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/ballot_position.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/templates/base_admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/base_admin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/templates/candidates.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/candidates.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/templates/delete.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/delete.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/templates/deletecandidate.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/delete_candidate.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/templates/editcandidate.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/edit_candidate.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/templates/editvoter.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/edit_voter.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/templates/positions.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/positions.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/templates/registration.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/registration.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/templates/voter_create.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/voter_create.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/templates/voters.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/voters.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +68,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "jason",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/User/Python Projexts/SoftwareEngineeringBCS3106/Voting_System",
+    "last_opened_file_path": "C:/Users/User/Python Projexts/SoftwareEngineeringBCS3106/Voting_System/static",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -95,10 +85,12 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\User\Python Projexts\SoftwareEngineeringBCS3106\Voting_System\static" />
       <recent name="C:\Users\User\Python Projexts\SoftwareEngineeringBCS3106\Voting_System" />
       <recent name="C:\Users\User\Python Projexts\SoftwareEngineeringBCS3106\Voting_System\templates\images" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\User\Python Projexts\SoftwareEngineeringBCS3106\Voting_System\static\images" />
       <recent name="C:\Users\User\Python Projexts\SoftwareEngineeringBCS3106" />
       <recent name="C:\Users\User\Python Projexts\SoftwareEngineeringBCS3106\Voting_System\static" />
       <recent name="C:\Users\User\Python Projexts\SoftwareEngineeringBCS3106\Voting_System\templates" />
