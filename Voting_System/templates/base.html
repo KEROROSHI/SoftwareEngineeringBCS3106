@@ -9,8 +9,14 @@
 </head>
 <body>
 {% block content %}
-    <h1>Hello, {{ session['voters_name'] }}</h1>
-    <a class="nav-link" href="{{ url_for('voter_logout') }}">Logout</a>
+    <h1>Hello, {% if 'username' in session or 'voters_name' in session %}{{ session['voters_name'] }}{% else %}
+        User{% endif %}</h1>
+    {% if 'username' in session or 'voters_name' in session %}
+        <a class="nav-link" href="{{ url_for('voter_logout') }}">Logout</a>
+    {% else %}g
+        <a class="nav-link" href="{{ url_for('voter_login') }}">Are you a Voter?</a>
+        <a class="nav-link" href="{{ url_for('admin_login') }}">Are you an Admin?</a>
+    {% endif %}
 {% endblock %}
 </body>
 <script>
