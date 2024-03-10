@@ -110,7 +110,6 @@ def admin_dashboard():
     print(session)
     # Checks if the admin is logged-in in order to access the page
     if 'username' in session:
-
         return render_template('admin_dashboard.html')
     else:
         flash("You must be logged in as an Administrator to access that page!", category='danger')
@@ -119,19 +118,23 @@ def admin_dashboard():
 
 @app.route('/dashboard')
 def dashboard():
-    # Establish database connection
-    cursor = mysql_conn.cursor()
+    if 'username' in session:
+        # Establish database connection
+        cursor = mysql_conn.cursor()
 
-    # Execute SQL queries
-    positions_count = get_positions_count(cursor)
-    candidates_count = get_candidates_count(cursor)
-    voters_count = get_voters_count(cursor)
-    voters_voted_count = get_voters_voted_count(cursor)
+        # Execute SQL queries
+        positions_count = get_positions_count(cursor)
+        candidates_count = get_candidates_count(cursor)
+        voters_count = get_voters_count(cursor)
+        voters_voted_count = get_voters_voted_count(cursor)
 
-    # Close database connection
-    cursor.close()
-    return render_template('dashboard.html', positions_count=positions_count, candidates_count=candidates_count,
-                           voters_count=voters_count, voters_voted_count=voters_voted_count)
+        # Close database connection
+        cursor.close()
+        return render_template('dashboard.html', positions_count=positions_count, candidates_count=candidates_count,
+                               voters_count=voters_count, voters_voted_count=voters_voted_count)
+    else:
+        flash("You must be logged in as an Administrator to access that page!", category='danger')
+        return redirect(url_for('admin_login'))
 
 
 @app.route('/voter', methods=['GET', 'POST'])

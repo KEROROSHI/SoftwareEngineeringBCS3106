@@ -34,7 +34,7 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark" style="z-index: 1">
     <div class="container-fluid" style="display: grid; grid-template-columns: 1fr 1fr">
         <div>
-            <a class="navbar-brand" href="#">Voting System</a>
+            <a class="navbar-brand" href="{{ url_for('admin_dashboard') }}">Voting System</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -138,6 +138,7 @@
         var contentHeight = document.body.scrollHeight; // Get the height of the content
         sidebar.style.height = contentHeight + 'px'; // Set the height of the sidebar equal to the height of the content
     }
+
     // Call the adjustSidebarHeight function when the window is resized
     window.addEventListener('resize', adjustSidebarHeight);
 
