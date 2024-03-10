@@ -410,3 +410,31 @@ def submit_ballot():
 @app.route('/ballot/already_voted')
 def already_voted():
     return render_template('already_voted.html')
+
+
+@app.route('/ballot_position')
+def ballot_position():
+    cursor = mysql_conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM positions ORDER BY priority ASC")
+    positions = cursor.fetchall()
+    cursor.close()
+    for position in positions:
+        cursor = mysql_conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM candidates WHERE position_id = %s", (position['id'],))
+        candidates = cursor.fetchall()
+        cursor.close()
+        for candidate in candidates:
+            checked = ''
+            if position['description'] in request.form:
+                value = request.form.getlist(position['description'])
+                if str(candidate['id']) in value:
+                    checked = 'checked'
+            input_type = 'checkbox' if position['max_vote'] > 1 else 'radio'
+            candidate[
+                'input'] = f'<input type="{input_type}" class="flat-red {position["description"]}" name="{position["description"]}" value="{candidate["id"]}" {checked}>'
+            candidate['image'] = candidate['photo'] if candidate[
+                'photo'] else url_for("static", filename="images/9691288a3fadba6a8e6173d4eea20488.jpg")
+        position['instruct'] = f'You may select up to {position["max_vote"]} candidates' if position[
+                                                                                                'max_vote'] > 1 else 'Select only one candidate'
+        position['candidates'] = candidates
+    return render_template('ballot_position.html', positions=positions)
