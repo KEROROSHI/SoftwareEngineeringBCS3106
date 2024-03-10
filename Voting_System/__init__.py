@@ -33,7 +33,6 @@ def generate_voter_id(length=15):
     return ''.join(random.choices(characters, k=length))
 
 
-
 def hashed_password(password):
     return generate_password_hash(password)
 
