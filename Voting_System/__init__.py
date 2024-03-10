@@ -7,7 +7,7 @@ import random
 import string
 import mysql.connector
 
-app = Flask(__name__, template_folder="./template")
+app = Flask(__name__, template_folder="./templates")
 app.secret_key = 'your_secret_key'
 
 # MySQL configurations
@@ -350,7 +350,3 @@ def delete_candidate():
             flash(f'Error deleting candidate: {str(e)}', 'danger')
         finally:
             return redirect(url_for('candidates'))
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
