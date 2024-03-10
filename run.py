@@ -1,4 +1,4 @@
 from Voting_System import app
 
-if __name__ == '__main__':
-    app.run(port=5001, debug=True)
+if __name__ == "__main__":
+    app.run(debug=True)

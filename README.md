@@ -1,1 +1,3 @@
-#Voting Process Functionality
+# User Registration and Functionality
+
+# Voting Process Functionality
