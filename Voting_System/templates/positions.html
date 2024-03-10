@@ -2,7 +2,8 @@
 {% block content %}
     <div class="container">
         <a class="btn btn-primary" href="{{ url_for('position_create') }}" type="button">Create New Position</a>
-        <table class="table table-secondary table-hover" style="margin-top: 30px">
+        <h1 class="text-center">Positions</h1>
+        <table class="table table-striped text-center" style="margin-top: 30px">
             <thead>
             <tr>
                 <th scope="col">Position</th>
@@ -26,9 +27,9 @@
                             <input type="hidden" value="{{ position['id'] }}" name="position_id">
                             <button class="btn btn-outline-danger" type="submit">Delete</button>
                         </form>#}
-                        <a class="btn btn-outline-primary"
+                        <a class="btn btn-primary"
                            href='{{ url_for("position_update", position_id=position["id"]) }}'>Edit</a>
-                        <a class="btn btn-outline-danger"
+                        <a class="btn btn-danger"
                            href='{{ url_for("position_delete", position_id=position["id"]) }}'>Delete</a>
                     </td>
                 </tr>

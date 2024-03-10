@@ -1,3 +1,5 @@
+from flask import Flask, flash, render_template, request, redirect, url_for, session
+from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
 import hashlib
@@ -5,8 +7,6 @@ import random
 import string
 import mysql.connector
 import mysql.connector
-from flask import Flask, flash, render_template, request, redirect, url_for, session
-from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = 'your_secret_key'
@@ -93,7 +93,7 @@ def check_password(password, hashed_password):
 #     return render_template("login.html", form_data={}, errors=[])
 
 
-@app.route('/voters', methods=["GET", "POST"])
+@app.route('/admin/voters', methods=["GET", "POST"])
 def voters():
     if 'username' in session:
         if request.method == 'POST':
@@ -106,7 +106,7 @@ def voters():
 
             # If the user does not select a file, the browser submits an empty file without a filename.
             if file.filename == '':
-                flash('No selected file')
+                flash('No selected file',category='danger')
                 return redirect(request.url)
 
             if file and allowed_file(file.filename):
@@ -141,9 +141,9 @@ def voters():
                     cursor.close()
                 except mysql.connector.Error as e:
                     print("Error inserting into database:", e)
-                    flash('Error inserting into database', 'error')
+                    flash('Error inserting into database', category='error')
 
-                flash('Voter added successfully', 'success')
+                flash('Voter added successfully', category='success')
                 return redirect(url_for('voters'))
 
         # Fetch data from the database to display in the template
@@ -155,7 +155,7 @@ def voters():
             cursor.close()
         except mysql.connector.Error as e:
             print("Error fetching data from database:", e)
-            flash('Error fetching data from database', 'error')
+            flash('Error fetching data from database', category='error')
             voters_data = []
 
         return render_template('voters.html', voters_data=voters_data)
@@ -164,7 +164,7 @@ def voters():
         return redirect(url_for('admin_login'))
 
 
-@app.route('/editvoter', methods=["GET", "POST"])
+@app.route('/admin/edit_voter', methods=["GET", "POST"])
 def edit_voter():
     if 'username' in session:
         if request.method == 'GET':
@@ -178,16 +178,16 @@ def edit_voter():
                 voter = cursor.fetchone()
 
                 if not voter:
-                    flash('Voter not found', 'error')
+                    flash('Voter not found', category='error')
                     return redirect(url_for('voters'))
 
                 cursor.close()
             except mysql.connector.Error as e:
                 print("Error fetching voter details:", e)
-                flash('Error fetching voter details', 'error')
+                flash('Error fetching voter details', category='error')
                 return redirect(url_for('voters'))
 
-            return render_template('editvoter.html', voter=voter)
+            return render_template('edit_voter.html', voter=voter)
 
         elif request.method == 'POST':
             voter_id = request.form['id']
@@ -203,19 +203,19 @@ def edit_voter():
                 mysql_conn.commit()
                 cursor.close()
 
-                flash('Voter updated successfully', 'success')
+                flash('Voter updated successfully', category='success')
                 return redirect(url_for('voters'))
 
             except mysql.connector.Error as e:
                 print("Error updating voter details:", e)
-                flash('Error updating voter details', 'error')
+                flash('Error updating voter details', category='error')
                 return redirect(url_for('voters'))
     else:
         flash("You must be logged in as an Administrator to access that page!", category='danger')
         return redirect(url_for('admin_login'))
 
 
-@app.route('/delete', methods=["GET"])
+@app.route('/admin/delete', methods=["GET"])
 def delete():
     if 'username' in session:
         if request.method == 'GET':
@@ -228,10 +228,10 @@ def delete():
                 cursor.execute(delete_query, (voter_id,))
                 mysql_conn.commit()
                 cursor.close()
-                flash('Successfully deleted', 'success')
+                flash('Successfully deleted', category='success')
             except mysql.connector.Error as e:
                 print("Error deleting from database:", e)
-                flash('An error occurred while attempting to delete the record', 'error')
+                flash('An error occurred while attempting to delete the record', category='error')
 
             return redirect(url_for('voters'))
     else:
@@ -239,18 +239,18 @@ def delete():
         return redirect(url_for('admin_login'))
 
 
-@app.route('/candidates', methods=["GET", "POST"])
+@app.route('/admin/candidates', methods=["GET", "POST"])
 def candidates():
     if 'username' in session:
         if request.method == 'POST':
             if 'image' not in request.files:
-                flash('No file part')
+                flash('No file part',category='danger')
                 return redirect(request.url)
 
             file = request.files['image']
 
             if file.filename == '':
-                flash('No selected file')
+                flash('No selected file',category='danger')
                 return redirect(request.url)
 
             if file and allowed_file(file.filename):
@@ -273,9 +273,9 @@ def candidates():
                     cursor.close()
                 except mysql.connector.Error as e:
                     print("Error inserting into database:", e)
-                    flash('Error inserting into database', 'error')
+                    flash('Error inserting into database', category='error')
 
-                flash('Candidate added successfully', 'success')
+                flash('Candidate added successfully', category='success')
                 return redirect(url_for('candidates'))
 
         try:
@@ -291,7 +291,7 @@ def candidates():
             cursor.close()
         except mysql.connector.Error as e:
             print("Error fetching data from database:", e)
-            flash('Error fetching data from database', 'error')
+            flash('Error fetching data from database', category='error')
             candidates_data = []
             positions_data = []
 
@@ -301,7 +301,7 @@ def candidates():
         return redirect(url_for('admin_login'))
 
 
-@app.route('/editcandidate', methods=["GET", "POST"])
+@app.route('/admin/edit_candidate', methods=["GET", "POST"])
 def edit_candidate():
     if 'username' in session:
         if request.method == 'GET':
@@ -323,10 +323,10 @@ def edit_candidate():
                 cursor.close()
             except mysql.connector.Error as e:
                 print("Error fetching data from database:", e)
-                flash('Error fetching data from database', 'error')
+                flash('Error fetching data from database', category='error')
                 return redirect(url_for('candidates'))
 
-            return render_template('editcandidate.html', candidate=candidate_data, positions=positions_data)
+            return render_template('edit_candidate.html', candidate=candidate_data, positions=positions_data)
 
         elif request.method == 'POST':
             # Retrieve form data
@@ -343,11 +343,11 @@ def edit_candidate():
                 cursor.execute(update_query, (firstname, lastname, position_id, platform, candidate_id))
                 mysql_conn.commit()
                 cursor.close()
-                flash('Candidate updated successfully', 'success')
+                flash('Candidate updated successfully', category='success')
 
             except mysql.connector.Error as e:
                 print("Error updating candidate in database:", e)
-                flash('Error updating candidate in database', 'error')
+                flash('Error updating candidate in database', category='error')
 
             return redirect(url_for('candidates'))  # Redirect to candidates page or handle appropriately
     else:
@@ -355,7 +355,7 @@ def edit_candidate():
         return redirect(url_for('admin_login'))
 
 
-@app.route('/deletecandidate', methods=["GET", "POST"])
+@app.route('/admin/delete_candidate', methods=["GET", "POST"])
 def delete_candidate():
     if 'username' in session:
         if request.method == 'GET':
@@ -367,14 +367,15 @@ def delete_candidate():
                 cursor.execute(delete_query, (candidate_id,))
                 mysql_conn.commit()
                 cursor.close()
-                flash('Candidate deleted successfully', 'success')
+                flash('Candidate deleted successfully', category='success')
             except Exception as e:
-                flash(f'Error deleting candidate: {str(e)}', 'danger')
+                flash(f'Error deleting candidate: {str(e)}', category='danger')
             finally:
                 return redirect(url_for('candidates'))
     else:
         flash("You must be logged in as an Administrator to access that page!", category='danger')
         return redirect(url_for('admin_login'))
+
 
 @app.route('/')
 def hello_world():
@@ -418,7 +419,7 @@ def get_voters_voted_count(cursor):
     return cursor.fetchone()[0]
 
 
-@app.route('/admin', methods=['GET', 'POST'])
+@app.route('/admin_login', methods=['GET', 'POST'])
 def admin_login():
     print(session)
     if 'voters_id' not in session or 'id' not in session or 'voters_name' not in session:
@@ -436,7 +437,7 @@ def admin_login():
 
                 if mysql_result is None:
                     # Handle case where no admin with the provided username exists
-                    flash("User does not exist")
+                    flash("User does not exist", category='danger')
                     return redirect(url_for('admin_login'))
 
                 fetched_password = mysql_result['password']
@@ -448,6 +449,7 @@ def admin_login():
                     # Set session of the successfully logged-in user/admin
                     session['username'] = username
                     print(session['username'])
+                    flash("Successfully logged-in!", category='success')
                     return redirect(url_for('admin_dashboard'))
                 else:
                     flash("Invalid username or password", category='danger')
@@ -479,7 +481,7 @@ def admin_dashboard():
         return redirect(url_for('admin_login'))
 
 
-@app.route('/dashboard')
+@app.route('/admin/dashboard')
 def dashboard():
     if 'username' in session:
         # Establish database connection
@@ -551,7 +553,7 @@ def voter_logout():
     return redirect(url_for('voter_login'))
 
 
-@app.route('/positions', methods=['GET', 'POST'])
+@app.route('/admin/positions', methods=['GET', 'POST'])
 def positions():
     print(session)
     # Checks if the admin is logged-in in order to access the page
@@ -578,7 +580,7 @@ def positions():
         return redirect(url_for('admin_login'))
 
 
-@app.route('/position_create', methods=['GET', 'POST'])
+@app.route('/admin/position_create', methods=['GET', 'POST'])
 def position_create():
     # Checks if the admin is logged-in in order to access the page
     if 'username' in session:
@@ -608,7 +610,7 @@ def position_create():
         return redirect(url_for('admin_login'))
 
 
-@app.route('/position_update/<int:position_id>', methods=['GET', 'POST'])
+@app.route('/admin/position_update/<int:position_id>', methods=['GET', 'POST'])
 def position_update(position_id):
     print(session)
     # Checks if the admin is logged-in in order to access the page
@@ -642,7 +644,7 @@ def position_update(position_id):
         return redirect(url_for('admin_login'))
 
 
-@app.route('/position_delete/<int:position_id>', methods=['GET', 'POST'])
+@app.route('/admin/position_delete/<int:position_id>', methods=['GET', 'POST'])
 def position_delete(position_id):
     print(session)
     # Checks if the admin is logged-in in order to access the page
@@ -661,7 +663,7 @@ def position_delete(position_id):
         return redirect(url_for('admin_login'))
 
 
-@app.route('/ballot', methods=['GET', 'POST'])
+@app.route('/voter/ballot', methods=['GET', 'POST'])
 def ballot():
     cursor = mysql_conn.cursor(dictionary=True)
     print(session)
@@ -704,7 +706,7 @@ def ballot():
         return redirect(url_for('voter_login'))
 
 
-@app.route('/submit_ballot', methods=['POST'])
+@app.route('/voter/submit_ballot', methods=['POST'])
 def submit_ballot():
     if 'voters_id' in session:
         if request.method == 'POST':
@@ -773,12 +775,12 @@ def submit_ballot():
         return redirect(url_for('voter_login'))  # Redirect to the login page if voters_id is not in session
 
 
-@app.route('/ballot/already_voted')
+@app.route('/voter/ballot/already_voted')
 def already_voted():
     return render_template('already_voted.html')
 
 
-@app.route('/ballot_position')
+@app.route('/voter/ballot_position')
 def ballot_position():
     cursor = mysql_conn.cursor(dictionary=True)
     cursor.execute("SELECT * FROM positions ORDER BY priority ASC")

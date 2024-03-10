@@ -5,20 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="64dbc12f-db02-4fb0-bf89-350379c721fb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Voting_System/static/BGimage/college-1.0.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Voting_System/static/images/02d7178e63e15676763d1cf6b1a85e9a.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Voting_System/static/images/129fb985e509f0e58780a17e3e9206d1.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Voting_System/static/images/2680024e6da07c5a2d305d2c6c75a4f8.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Voting_System/static/images/2da9e44c6a2c6dd28a2d1fa6bc67a7b8.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Voting_System/static/images/7ed1e318bf3dc07eaf35ed0280a1d261.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Voting_System/static/images/9691288a3fadba6a8e6173d4eea20488.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Voting_System/static/images/da876c252860a8e47521e65f80d6ac6b.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Voting_System/static/images/wallhaven-kxl8zq_3840x2160.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2_26_2024_21_08__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2_26_2024_21_08__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Voting_System/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/templates/voterslandingpage.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/voterslandingpage.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Voting_System/templates/admin_dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/admin_dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Voting_System/templates/ballot_position.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/ballot_position.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Voting_System/templates/base_admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/base_admin.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Voting_System/templates/candidates.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/candidates.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Voting_System/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Voting_System/templates/delete.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/delete.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Voting_System/templates/deletecandidate.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/delete_candidate.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Voting_System/templates/editcandidate.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/edit_candidate.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Voting_System/templates/editvoter.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/edit_voter.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Voting_System/templates/positions.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/positions.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Voting_System/templates/registration.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/registration.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Voting_System/templates/voter_create.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/voter_create.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Voting_System/templates/voters.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/voters.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -271,7 +273,7 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/SoftwareEngineeringBCS3106$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1709798825674" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/SoftwareEngineeringBCS3106$SoftwareEngineeringBCS3106.coverage" NAME="SoftwareEngineeringBCS3106 Coverage Results" MODIFIED="1710051432974" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/SoftwareEngineeringBCS3106$run.coverage" NAME="run Coverage Results" MODIFIED="1710069179996" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/SoftwareEngineeringBCS3106$run.coverage" NAME="run Coverage Results" MODIFIED="1710075720716" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/SoftwareEngineeringBCS3016$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1708688098811" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>

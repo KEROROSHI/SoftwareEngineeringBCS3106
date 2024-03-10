@@ -30,7 +30,7 @@
                                                     <i class="bi bi-search"></i> Platform
                                                 </button>
                                                 <img src="{{ candidate['image'] }}" height="100px" width="100px"
-                                                     class="rounded-circle" alt="Candidate Image">
+                                                     class="{#rounded-circle#}" alt="Candidate Image">
                                                 <span class="cname">{{ candidate['firstname'] }} {{ candidate['lastname'] }}</span>
                                             </li>
                                         {% endfor %}
@@ -41,7 +41,7 @@
                     </div>
                 </div>
             {% endfor %}
-            <div class="text-center">
+            <div class="text-center" style="margin-top: 30px">
                 <button type="button" class="btn btn-success" id="preview"><i class="bi bi-file-text"></i> Preview
                 </button>
                 <button type="button" class="btn btn-primary" name="vote"><i class="bi bi-check-square"></i> Submit
