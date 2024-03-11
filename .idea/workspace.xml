@@ -7,9 +7,7 @@
     <list default="true" id="64dbc12f-db02-4fb0-bf89-350379c721fb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Voting_System/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/templates/ballot.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/ballot.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/templates/base_voter.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/base_voter.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/templates/candidates.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/candidates.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Voting_System/templates/base_admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/base_admin.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +71,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "reference.settings.ide.settings.new.ui",
+    "settings.editor.selected.configurable": "settings.sync",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -207,7 +205,7 @@
       <workItem from="1710128234358" duration="1090000" />
       <workItem from="1710154208749" duration="7498000" />
       <workItem from="1710178248637" duration="25000" />
-      <workItem from="1710178295662" duration="3738000" />
+      <workItem from="1710178295662" duration="5113000" />
     </task>
     <servers />
   </component>

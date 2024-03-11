@@ -123,7 +123,7 @@ def voters():
 
             # If the user does not select a file, the browser submits an empty file without a filename.
             if file.filename == '':
-                flash('No selected picture. A default one has been assigned to you!', category='info')
+                flash('No uploaded picture. A default one has been assigned to the voter!', category='info')
 
             if file and allowed_file(file.filename):
                 # Secure the filename before saving it
@@ -272,7 +272,7 @@ def candidates():
 
             # If the user does not select a file, the browser submits an empty file without a filename.
             if file.filename == '':
-                flash('No selected picture. A default one has been assigned to you!', category='info')
+                flash('No uploaded picture. A default one has been assigned to the candidate!', category='info')
 
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
