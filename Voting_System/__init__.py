@@ -688,7 +688,8 @@ def ballot():
                 position['instruct'] = f'You may select up to {position["max_vote"]} candidates' if position[
                                                                                                         'max_vote'] > 1 else 'Select only one candidate'
                 position['candidates'] = candidates
-            return render_template('ballot.html', positions=positions)
+                placeholder_photo = '/static/images/istockphoto-1327592449-612x612.jpg'
+            return render_template('ballot.html', positions=positions, placeholder_photo=placeholder_photo)
     else:
         flash('Please login to access that page!', category='danger')
         return redirect(url_for('voter_login'))
@@ -793,4 +794,5 @@ def ballot_position():
         position['instruct'] = f'You may select up to {position["max_vote"]} candidates' if position[
                                                                                                 'max_vote'] > 1 else 'Select only one candidate'
         position['candidates'] = candidates
-    return render_template('ballot_position.html', positions=positions)
+        placeholder_photo = '/static/images/istockphoto-1327592449-612x612.jpg'
+    return render_template('ballot_position.html', positions=positions, placeholder_photo=placeholder_photo)
