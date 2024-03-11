@@ -5,6 +5,7 @@
 {% block content %}
     <div class="container">
         <form id="ballotForm">
+        <h1>Ballot - Voter's Perspective</h1>
             {% for position in positions %}
                 <div class="row">
                     <div class="col-12">
@@ -31,7 +32,7 @@
                                                 </button>
                                                 <img src="{% if candidate.photo %}{{ url_for('static', filename='images/' + candidate.photo) }}{% else %}{{ placeholder_photo }}{% endif %}"
                                                      height="100px" width="100px"
-                                                     class="{#rounded-circle#}" alt="Candidate Image">
+                                                     class="rounded-circle" alt="Candidate Image">
                                                 <span class="cname">{{ candidate['firstname'] }} {{ candidate['lastname'] }}</span>
                                             </li>
                                         {% endfor %}

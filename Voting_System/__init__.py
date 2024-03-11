@@ -87,7 +87,8 @@ def get_total_votes(cursor):
 
 
 def get_top_candidates(cursor):
-    sql = "SELECT c.firstname, c.lastname, COUNT(*) as votes_count FROM votes v JOIN candidates c ON v.candidate_id = c.id GROUP BY v.candidate_id ORDER BY votes_count DESC LIMIT 3"
+    sql = """SELECT c.firstname, c.lastname, COUNT(*) as votes_count FROM votes v 
+                JOIN candidates c ON v.candidate_id = c.id GROUP BY v.candidate_id ORDER BY votes_count DESC LIMIT 3"""
     cursor.execute(sql)
     return cursor.fetchall()
 
@@ -152,7 +153,8 @@ def voters():
             try:
                 cursor = mysql_conn.cursor()
                 # Create a new record
-                sql = "INSERT INTO `voters` (`voters_id`, `password`, `firstname`, `lastname`, `photo`) VALUES (%s, %s, %s, %s, %s)"
+                sql = """INSERT INTO `voters` (`voters_id`, `password`, `firstname`, `lastname`, `photo`) 
+                            VALUES (%s, %s, %s, %s, %s)"""
                 cursor.execute(sql, (voter_id, hashed_pass, firstname, lastname, random_filename))
                 mysql_conn.commit()
                 cursor.close()
@@ -176,7 +178,8 @@ def voters():
             voters_data = []
 
         placeholder_photo = '/static/images/istockphoto-1327592449-612x612.jpg'
-        return render_template('voters.html', voters_data=voters_data, placeholder_photo=placeholder_photo)
+        return render_template('voters.html', voters_data=voters_data,
+                               placeholder_photo=placeholder_photo)
     else:
         flash("You must be logged in as an Administrator to access that page!", category='danger')
         return redirect(url_for('admin_login'))
@@ -287,7 +290,8 @@ def candidates():
 
             try:
                 cursor = mysql_conn.cursor()
-                sql = "INSERT INTO `candidates` (`position_id`, `firstname`, `lastname`, `photo`, `platform`) VALUES (%s, %s, %s, %s, %s)"
+                sql = """INSERT INTO `candidates` (`position_id`, `firstname`, `lastname`, `photo`, `platform`) 
+                            VALUES (%s, %s, %s, %s, %s)"""
                 cursor.execute(sql, (position, firstname, lastname, random_filename, platform))
                 mysql_conn.commit()
                 cursor.close()
@@ -300,7 +304,9 @@ def candidates():
 
         try:
             cursor = mysql_conn.cursor(dictionary=True)
-            select_candidates_query = "SELECT *, candidates.id AS canid FROM candidates LEFT JOIN positions ON positions.id=candidates.position_id ORDER BY positions.priority ASC"
+            select_candidates_query = """SELECT *, candidates.id AS canid FROM candidates 
+                                            LEFT JOIN positions ON positions.id=candidates.position_id 
+                                            ORDER BY positions.priority ASC"""
             cursor.execute(select_candidates_query)
             candidates_data = cursor.fetchall()
 
@@ -316,7 +322,8 @@ def candidates():
             positions_data = []
 
         placeholder_photo = '/static/images/istockphoto-1327592449-612x612.jpg'
-        return render_template('candidates.html', candidates_data=candidates_data, positions=positions_data,
+        return render_template('candidates.html', candidates_data=candidates_data,
+                               positions=positions_data,
                                placeholder_photo=placeholder_photo)
     else:
         flash("You must be logged in as an Administrator to access that page!", category='danger')
@@ -348,7 +355,8 @@ def edit_candidate():
                 flash('Error fetching data from database', category='error')
                 return redirect(url_for('candidates'))
 
-            return render_template('edit_candidate.html', candidate=candidate_data, positions=positions_data)
+            return render_template('edit_candidate.html', candidate=candidate_data,
+                                   positions=positions_data)
 
         elif request.method == 'POST':
             # Retrieve form data
@@ -361,7 +369,8 @@ def edit_candidate():
             try:
                 cursor = mysql_conn.cursor()
                 # Update candidate details in the database
-                update_query = "UPDATE candidates SET firstname = %s, lastname = %s, position_id = %s, platform = %s WHERE id = %s"
+                update_query = """UPDATE candidates SET firstname = %s, lastname = %s, position_id = %s, platform = %s 
+                                    WHERE id = %s"""
                 cursor.execute(update_query, (firstname, lastname, position_id, platform, candidate_id))
                 mysql_conn.commit()
                 cursor.close()
@@ -461,7 +470,8 @@ def admin_dashboard():
         total_votes = get_total_votes(cursor_non_dict)
         top_candidates = get_top_candidates(cursor)
         print(top_candidates)
-        return render_template('admin_dashboard.html', top_candidates=top_candidates, total_votes=total_votes,
+        return render_template('admin_dashboard.html', top_candidates=top_candidates,
+                               total_votes=total_votes,
                                voter_turnout=voter_turnout)
     else:
         flash("You must be logged in as an Administrator to access that page!", category='danger')
@@ -482,7 +492,8 @@ def dashboard():
 
         # Close database connection
         cursor.close()
-        return render_template('dashboard.html', positions_count=positions_count, candidates_count=candidates_count,
+        return render_template('dashboard.html', positions_count=positions_count,
+                               candidates_count=candidates_count,
                                voters_count=voters_count, voters_voted_count=voters_voted_count)
     else:
         flash("You must be logged in as an Administrator to access that page!", category='danger')
