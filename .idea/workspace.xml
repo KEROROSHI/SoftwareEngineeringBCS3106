@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="64dbc12f-db02-4fb0-bf89-350379c721fb" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/40db5a77-1af4-48d9-930e-3674222f2f93.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/40db5a77-1af4-48d9-930e-3674222f2f93.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Voting_System/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Voting_System/templates/candidates.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/candidates.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Voting_System/templates/voters.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/voters.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -219,7 +220,7 @@
       <workItem from="1710051402589" duration="12346000" />
       <workItem from="1710078250565" duration="6085000" />
       <workItem from="1710128234358" duration="1090000" />
-      <workItem from="1710154208749" duration="686000" />
+      <workItem from="1710154208749" duration="3194000" />
     </task>
     <servers />
   </component>
@@ -265,7 +266,7 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/SoftwareEngineeringBCS3106$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1709798825674" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/SoftwareEngineeringBCS3106$SoftwareEngineeringBCS3106.coverage" NAME="SoftwareEngineeringBCS3106 Coverage Results" MODIFIED="1710051432974" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/SoftwareEngineeringBCS3106$run.coverage" NAME="run Coverage Results" MODIFIED="1710154210811" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/SoftwareEngineeringBCS3106$run.coverage" NAME="run Coverage Results" MODIFIED="1710163234568" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/SoftwareEngineeringBCS3016$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1708688098811" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>

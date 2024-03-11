@@ -23,7 +23,7 @@
                 <tr>
                     <td>{{ candidate.description }}</td>
                     <!-- Changed from candidate.position_id to candidate.description -->
-                    <td><img src="{{ url_for('static', filename='images/' + candidate.photo) }}" alt=""></td>
+                    <td><img src="{% if candidate.photo %}{{ url_for('static', filename='images/' + candidate.photo) }}{% else %}{{ placeholder_photo }}{% endif %}" alt=""></td>
                     <td>{{ candidate.firstname }}</td>
                     <td>{{ candidate.lastname }}</td>
                     <td>{{ candidate.platform }}</td>
@@ -65,7 +65,7 @@
                             </div>
                             <div class="form-group mb-2">
                                 <label for="image">Photo</label>
-                                <input type="file" class="form-control" id="image" name="image" required>
+                                <input type="file" class="form-control" id="image" name="image">
                             </div>
                             <div class="form-group mb-2">
                                 <label for="platform">Platform</label>

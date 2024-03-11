@@ -118,11 +118,11 @@ def voters():
                 return redirect(request.url)
 
             file = request.files['image']
+            print(file.filename)
 
             # If the user does not select a file, the browser submits an empty file without a filename.
             if file.filename == '':
-                flash('No selected file', category='danger')
-                return redirect(request.url)
+                flash('No selected picture. A default one has been assigned to you!', category='info')
 
             if file and allowed_file(file.filename):
                 # Secure the filename before saving it
@@ -134,32 +134,34 @@ def voters():
 
                 # Save the file to the upload folder
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], random_filename))
+            else:
+                random_filename = ''
 
-                # Process form data
-                firstname = request.form['firstname']
-                lastname = request.form['lastname']
-                password = request.form['password']
+            # Process form data
+            firstname = request.form['firstname']
+            lastname = request.form['lastname']
+            password = request.form['password']
 
-                # Hash the password using the function
-                hashed_pass = hashed_password(password)
+            # Hash the password using the function
+            hashed_pass = hashed_password(password)
 
-                # Generate voter ID
-                voter_id = generate_voter_id()
+            # Generate voter ID
+            voter_id = generate_voter_id()
 
-                # Insert data into the database
-                try:
-                    cursor = mysql_conn.cursor()
-                    # Create a new record
-                    sql = "INSERT INTO `voters` (`voters_id`, `password`, `firstname`, `lastname`, `photo`) VALUES (%s, %s, %s, %s, %s)"
-                    cursor.execute(sql, (voter_id, hashed_pass, firstname, lastname, random_filename))
-                    mysql_conn.commit()
-                    cursor.close()
-                except mysql.connector.Error as e:
-                    print("Error inserting into database:", e)
-                    flash('Error inserting into database', category='error')
+            # Insert data into the database
+            try:
+                cursor = mysql_conn.cursor()
+                # Create a new record
+                sql = "INSERT INTO `voters` (`voters_id`, `password`, `firstname`, `lastname`, `photo`) VALUES (%s, %s, %s, %s, %s)"
+                cursor.execute(sql, (voter_id, hashed_pass, firstname, lastname, random_filename))
+                mysql_conn.commit()
+                cursor.close()
+            except mysql.connector.Error as e:
+                print("Error inserting into database:", e)
+                flash('Error inserting into database', category='error')
 
-                flash('Voter added successfully', category='success')
-                return redirect(url_for('voters'))
+            flash('Voter added successfully', category='success')
+            return redirect(url_for('voters'))
 
         # Fetch data from the database to display in the template
         try:
@@ -173,7 +175,8 @@ def voters():
             flash('Error fetching data from database', category='error')
             voters_data = []
 
-        return render_template('voters.html', voters_data=voters_data)
+        placeholder_photo = '/static/images/istockphoto-1327592449-612x612.jpg'
+        return render_template('voters.html', voters_data=voters_data, placeholder_photo=placeholder_photo)
     else:
         flash("You must be logged in as an Administrator to access that page!", category='danger')
         return redirect(url_for('admin_login'))
@@ -264,9 +267,9 @@ def candidates():
 
             file = request.files['image']
 
-            # if file.filename == '':
-            #     flash('No selected file', category='danger')
-            #     return redirect(request.url)
+            # If the user does not select a file, the browser submits an empty file without a filename.
+            if file.filename == '':
+                flash('No selected picture. A default one has been assigned to you!', category='info')
 
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
@@ -274,24 +277,26 @@ def candidates():
                 random_filename = hashlib.md5(filename.encode()).hexdigest() + '.' + file_extension
 
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], random_filename))
+            else:
+                random_filename = ''
 
-                firstname = request.form['firstname']
-                lastname = request.form['lastname']
-                position = request.form['position']
-                platform = request.form['platform']
+            firstname = request.form['firstname']
+            lastname = request.form['lastname']
+            position = request.form['position']
+            platform = request.form['platform']
 
-                try:
-                    cursor = mysql_conn.cursor()
-                    sql = "INSERT INTO `candidates` (`position_id`, `firstname`, `lastname`, `photo`, `platform`) VALUES (%s, %s, %s, %s, %s)"
-                    cursor.execute(sql, (position, firstname, lastname, random_filename, platform))
-                    mysql_conn.commit()
-                    cursor.close()
-                except mysql.connector.Error as e:
-                    print("Error inserting into database:", e)
-                    flash('Error inserting into database', category='error')
+            try:
+                cursor = mysql_conn.cursor()
+                sql = "INSERT INTO `candidates` (`position_id`, `firstname`, `lastname`, `photo`, `platform`) VALUES (%s, %s, %s, %s, %s)"
+                cursor.execute(sql, (position, firstname, lastname, random_filename, platform))
+                mysql_conn.commit()
+                cursor.close()
+            except mysql.connector.Error as e:
+                print("Error inserting into database:", e)
+                flash('Error inserting into database', category='error')
 
-                flash('Candidate added successfully', category='success')
-                return redirect(url_for('candidates'))
+            flash('Candidate added successfully', category='success')
+            return redirect(url_for('candidates'))
 
         try:
             cursor = mysql_conn.cursor(dictionary=True)
@@ -310,7 +315,9 @@ def candidates():
             candidates_data = []
             positions_data = []
 
-        return render_template('candidates.html', candidates_data=candidates_data, positions=positions_data)
+        placeholder_photo = '/static/images/istockphoto-1327592449-612x612.jpg'
+        return render_template('candidates.html', candidates_data=candidates_data, positions=positions_data,
+                               placeholder_photo=placeholder_photo)
     else:
         flash("You must be logged in as an Administrator to access that page!", category='danger')
         return redirect(url_for('admin_login'))
