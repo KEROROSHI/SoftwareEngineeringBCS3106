@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="64dbc12f-db02-4fb0-bf89-350379c721fb" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/templates/base_admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/base_admin.html" afterDir="false" />
-    </list>
+    <list default="true" id="64dbc12f-db02-4fb0-bf89-350379c721fb" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -65,7 +61,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/User/Python Projexts/SoftwareEngineeringBCS3106/Voting_System/static",
+    "last_opened_file_path": "C:/Users/User/Python Projexts/SoftwareEngineeringBCS3106/Voting_System/static/BGimage",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -82,6 +78,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\User\Python Projexts\SoftwareEngineeringBCS3106\Voting_System\static\BGimage" />
       <recent name="C:\Users\User\Python Projexts\SoftwareEngineeringBCS3106\Voting_System\static" />
       <recent name="C:\Users\User\Python Projexts\SoftwareEngineeringBCS3106\Voting_System" />
       <recent name="C:\Users\User\Python Projexts\SoftwareEngineeringBCS3106\Voting_System\templates\images" />
@@ -205,7 +202,7 @@
       <workItem from="1710128234358" duration="1090000" />
       <workItem from="1710154208749" duration="7498000" />
       <workItem from="1710178248637" duration="25000" />
-      <workItem from="1710178295662" duration="5113000" />
+      <workItem from="1710178295662" duration="5427000" />
     </task>
     <servers />
   </component>
