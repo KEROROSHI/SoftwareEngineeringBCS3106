@@ -23,13 +23,15 @@
                 <tr>
                     <td>{{ candidate.description }}</td>
                     <!-- Changed from candidate.position_id to candidate.description -->
-                    <td><img src="{% if candidate.photo %}{{ url_for('static', filename='images/' + candidate.photo) }}{% else %}{{ placeholder_photo }}{% endif %}" alt=""></td>
+                    <td><img src="
+                            {% if candidate.photo %}{{ url_for('static', filename='images/' + candidate.photo) }}{% else %}{{ placeholder_photo }}{% endif %}"
+                             alt=""></td>
                     <td>{{ candidate.firstname }}</td>
                     <td>{{ candidate.lastname }}</td>
                     <td>{{ candidate.platform }}</td>
                     <td>
-                        <a class='btn btn-primary' href='edit_candidate?id={{ candidate.canid }}'>Edit</a>
-                        <a href='delete_candidate?id={{ candidate.canid }}' class='btn btn-danger'
+                        <a class='btn btn-primary' href='{{ url_for("edit_candidate",id=candidate.canid) }}'>Edit</a>
+                        <a href='{{ url_for("delete_candidate",id=candidate.canid) }}' class='btn btn-danger'
                            onclick="return confirmDelete(event)">Delete</a></td>
                 </tr>
             {% endfor %}
