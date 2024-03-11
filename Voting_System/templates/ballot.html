@@ -41,6 +41,7 @@
                                                     <i class="bi bi-search"></i> Platform
                                                 </button>
                                                 <img src="
+
                                                         {% if candidate.photo %}{{ url_for('static', filename='images/' + candidate.photo) }}{% else %}{{ placeholder_photo }}{% endif %}"
                                                      height="100px" width="100px"
                                                      class="rounded-circle" alt="Candidate Image">
@@ -62,4 +63,18 @@
             </div>
         </form>
     </div>
+    <script>
+        window.onload = function () {
+            const resetButtons = document.querySelectorAll('.reset');
+            resetButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    const positionDesc = this.getAttribute('data-desc');
+                    const inputs = document.querySelectorAll('input[name="' + positionDesc + '[]"]');
+                    inputs.forEach(function (input) {
+                        input.checked = false;
+                    });
+                });
+            });
+        };
+    </script>
 {% endblock %}

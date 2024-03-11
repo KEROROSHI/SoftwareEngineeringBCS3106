@@ -665,12 +665,12 @@ def position_delete(position_id):
 @app.route('/voter/ballot', methods=['GET', 'POST'])
 def ballot():
     cursor = mysql_conn.cursor(dictionary=True)
-    print(session)
+    # print(session)
     if 'voters_id' in session:
         cursor.execute("SELECT * FROM votes WHERE voters_id = %s", (session['id'],))
-        print(session['id'])
+        # print(session['id'])
         votes = cursor.fetchall()
-        print(votes)
+        # print(votes)
         cursor.close()
         if len(votes) > 0:
             flash("You have already voted for this", category='danger')
@@ -716,7 +716,7 @@ def submit_ballot():
                     flash('Please vote for at least one candidate', category='danger')
                     return redirect(url_for('ballot'))
                 else:
-                    print(request.form)
+                    # print(request.form)
                     session['post'] = request.form
                     # print(session)
                     cursor.execute("SELECT * FROM positions")
@@ -724,10 +724,8 @@ def submit_ballot():
                     error = False
                     sql_array = []
                     for position in positions:
-                        # print(position)
                         pos_id = position['id']
-                        # print(position['id'])
-                        # print(position['description'])
+                        print(f"The {position['description']}")
                         if position['description'] in request.form:
                             # print(position['description'])
                             if position['max_vote'] > 1:
@@ -738,14 +736,14 @@ def submit_ballot():
                                           position['description'], category='danger')
                                 else:
                                     for candidate in request.form.getlist(position['description']):
-                                        print(candidate)
+                                        # print(candidate)
                                         sql_array.append(
                                             (
                                                 "INSERT INTO votes (voters_id, candidate_id, position_id) VALUES (%s, %s, %s)",
                                                 (session['id'], candidate, pos_id)))
                             else:
                                 candidate = request.form[position['description']]
-                                print(candidate)
+                                # print(candidate)
                                 sql_array.append(
                                     ("INSERT INTO votes (voters_id, candidate_id, position_id) VALUES (%s, %s, %s)",
                                      (session['id'], candidate, pos_id)))

@@ -31,9 +31,11 @@
                              alt=""></td>
                     <td>{{ voter['voters_id'] }}</td>
                     <td>
+                        <div style="display: inline-flex; gap: 5px;">
                         <a class='btn btn-primary' href='{{ url_for("edit_voter", id=voter["id"]) }}'>Edit</a>
                         <a id="delete" href='{{ url_for("delete", id=voter["id"]) }}' class='btn btn-danger'
                            onclick="return confirmDelete(event)">Delete</a>
+                        </div>
                     </td>
                 </tr>
             {% endfor %}

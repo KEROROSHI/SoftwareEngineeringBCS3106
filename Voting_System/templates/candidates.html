@@ -30,9 +30,12 @@
                     <td>{{ candidate.lastname }}</td>
                     <td>{{ candidate.platform }}</td>
                     <td>
+                        <div style="display: inline-flex; gap: 5px;">
                         <a class='btn btn-primary' href='{{ url_for("edit_candidate",id=candidate.canid) }}'>Edit</a>
                         <a href='{{ url_for("delete_candidate",id=candidate.canid) }}' class='btn btn-danger'
-                           onclick="return confirmDelete(event)">Delete</a></td>
+                           onclick="return confirmDelete(event)">Delete</a>
+                        </div>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>

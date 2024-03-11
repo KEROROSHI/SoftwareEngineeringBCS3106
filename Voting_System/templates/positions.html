@@ -17,10 +17,12 @@
                     <td>{{ position['description'] }}</td>
                     <td>{{ position['max_vote'] }}</td>
                     <td>
+                        <div style="display: inline-flex; gap: 5px;">
                         <a class="btn btn-primary"
                            href='{{ url_for("position_update", position_id=position["id"]) }}'>Edit</a>
                         <a class="btn btn-danger"
                            href='{{ url_for("position_delete", position_id=position["id"]) }}'>Delete</a>
+                        </div>
                     </td>
                 </tr>
             {% endfor %}
