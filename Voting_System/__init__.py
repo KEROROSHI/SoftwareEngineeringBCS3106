@@ -264,9 +264,9 @@ def candidates():
 
             file = request.files['image']
 
-            if file.filename == '':
-                flash('No selected file', category='danger')
-                return redirect(request.url)
+            # if file.filename == '':
+            #     flash('No selected file', category='danger')
+            #     return redirect(request.url)
 
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
@@ -581,7 +581,8 @@ def position_create():
                                (position_name, max_votes, priority))
                 mysql_conn.commit()
                 cursor.close()
-                return redirect(url_for('admin_dashboard'))
+                flash('Position added successfully!', category='success')
+                return redirect(url_for('positions'))
             else:
                 return "MySQL connection failed"
         return render_template('position_create.html')
