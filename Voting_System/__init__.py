@@ -586,7 +586,10 @@ def position_create():
         cursor = mysql_conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM positions ORDER BY priority desc LIMIT 1")
         positions_result = cursor.fetchall()
-        priority = positions_result[0]['priority'] + 1
+        if positions_result:
+            priority = positions_result[0]['priority'] + 1
+        else:
+            priority = 1
         cursor.close()
         if request.method == 'POST':
             position_name = request.form['position_name']
@@ -602,7 +605,7 @@ def position_create():
                 flash('Position added successfully!', category='success')
                 return redirect(url_for('positions'))
             else:
-                flash('An error has occurred!',category='error')
+                flash('An error has occurred!', category='error')
                 return "MySQL connection failed"
         return render_template('position_create.html')
     else:
@@ -632,10 +635,10 @@ def position_update(position_id):
                                (position_name, max_votes, position_id))
                 mysql_conn.commit()
                 cursor.close()
-                flash("Position details updated successfully",category='success')
+                flash("Position details updated successfully", category='success')
                 return redirect(url_for('positions'))  # Redirect to the positions page after update
             else:
-                flash('An error has occurred!',category='error')
+                flash('An error has occurred!', category='error')
                 return "MySQL connection failed"
 
         # Pass position data to the template
@@ -657,10 +660,10 @@ def position_delete(position_id):
             cursor.execute("DELETE FROM positions WHERE id=%s", (position_id,))
             mysql_conn.commit()
             cursor.close()
-            flash('The position has been deleted!',category='info')
+            flash('The position has been deleted!', category='info')
             return redirect(url_for('positions'))
         else:
-            flash('An error has occurred!',category='error')
+            flash('An error has occurred!', category='error')
             return "MySQL connection failed"
     else:
         flash("You must be logged in as an administrator to access that page!", category='danger')
