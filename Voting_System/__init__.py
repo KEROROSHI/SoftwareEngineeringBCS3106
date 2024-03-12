@@ -459,10 +459,8 @@ def admin_logout():
     return redirect(url_for('admin_login'))
 
 
-@app.route('/admin_dashboard')
+@app.route('/admin_dashboard', methods=['GET', 'POST'])
 def admin_dashboard():
-    print(session)
-    # Checks if the admin is logged-in in order to access the page
     if 'username' in session:
         cursor_non_dict = mysql_conn.cursor()
         cursor = mysql_conn.cursor(dictionary=True)
@@ -470,6 +468,16 @@ def admin_dashboard():
         total_votes = get_total_votes(cursor_non_dict)
         top_candidates = get_top_candidates(cursor)
         print(top_candidates)
+
+        if request.method == 'POST' and 'reset_votes' in request.form:
+            # Reset votes by deleting records from specified tables
+            tables_to_reset = ['candidates', 'positions', 'voters', 'votes']
+            for table in tables_to_reset:
+                if table != 'admin':
+                    cursor_non_dict.execute(f"TRUNCATE TABLE {table}")
+
+            flash("Successfully reset votes and deleted records.", category='success')
+
         return render_template('admin_dashboard.html', top_candidates=top_candidates,
                                total_votes=total_votes,
                                voter_turnout=voter_turnout)
