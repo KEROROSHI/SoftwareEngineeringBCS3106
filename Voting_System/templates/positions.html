@@ -1,7 +1,7 @@
 {% extends 'base_admin.html' %}
 {% block content %}
     <div class="container">
-        <a class="btn btn-primary" href="{{ url_for('position_create') }}" type="button">Create New Position</a>
+        <a class="btn btn-primary" href="{{ url_for('position_create') }}" type="button">+ Create New Position</a>
         <h1 class="text-center">Positions</h1>
         <table class="table table-striped text-center" style="margin-top: 30px">
             <thead>
@@ -18,10 +18,10 @@
                     <td>{{ position['max_vote'] }}</td>
                     <td>
                         <div style="display: inline-flex; gap: 5px;">
-                        <a class="btn btn-primary"
-                           href='{{ url_for("position_update", position_id=position["id"]) }}'>Edit</a>
-                        <a class="btn btn-danger"
-                           href='{{ url_for("position_delete", position_id=position["id"]) }}'>Delete</a>
+                            <a class="btn btn-primary"
+                               href='{{ url_for("position_update", position_id=position["id"]) }}'>Edit</a>
+                            <a class="btn btn-danger"
+                               href='{{ url_for("position_delete", position_id=position["id"]) }}'>Delete</a>
                         </div>
                     </td>
                 </tr>
