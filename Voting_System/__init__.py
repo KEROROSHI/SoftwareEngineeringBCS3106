@@ -418,6 +418,12 @@ def admin_login():
                 # Takes the data from the form
                 username = request.form['username']
                 password = request.form['password']
+                if username == '':
+                    flash('Username is required', category='danger')
+                    return redirect(url_for('admin_login'))
+                elif password == '':
+                    flash('Password is required', category='danger')
+                    return redirect(url_for('admin_login'))
                 # Fetches the user data form the database
                 cursor = mysql_conn.cursor(dictionary=True)
                 cursor.execute("SELECT * FROM admin WHERE username = %s", (username,))
@@ -517,10 +523,11 @@ def voter_login():
             if request.method == 'POST':
                 voters_id = request.form['voters_id']
                 password = request.form['password']
-                if voters_id is None:
+                print(voters_id, password)
+                if voters_id == '':
                     flash("Voters ID is required", category='danger')
                     return redirect(url_for('voter_login'))
-                elif password is None:
+                elif password == '':
                     flash("Password is required", category='danger')
                     return redirect(url_for('voter_login'))
                 cursor = mysql_conn.cursor(dictionary=True)
@@ -795,7 +802,7 @@ def already_voted():
     return render_template('already_voted.html')
 
 
-@app.route('/voter/ballot_position')
+@app.route('/admin/ballot_position')
 def ballot_position():
     cursor = mysql_conn.cursor(dictionary=True)
     cursor.execute("SELECT * FROM positions ORDER BY priority ASC")
