@@ -1,12 +1,13 @@
+import hashlib
+import os
+import random
+import string
+
+import mysql.connector
+import mysql.connector
 from flask import Flask, flash, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-import os
-import hashlib
-import random
-import string
-import mysql.connector
-import mysql.connector
 
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = 'your_secret_key'
