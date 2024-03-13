@@ -116,7 +116,7 @@ def voters():
         if request.method == 'POST':
             # Check if the post request has the file part
             if 'image' not in request.files:
-                flash('No file part')
+                flash('No file part',category='danger')
                 return redirect(request.url)
 
             file = request.files['image']
