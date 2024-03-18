@@ -445,7 +445,18 @@ def admin_login():
                 if mysql_result['username'] == username and password_checker is True:
                     # Set session of the successfully logged-in user/admin
                     session['username'] = username
+                    if mysql_result['voting_session_id'] is not None:
+                        session['voting_session_id'] = mysql_result['voting_session_id']
+                        print(f'This :{session["voting_session_id"]}')
+                    else:
+                        session['voting_session_id'] = random.randint(8000000, 80000000)
+                        cursor = mysql_conn.cursor()
+                        cursor.execute('UPDATE admin SET voting_session_id=%s WHERE username=%s',
+                                       (session['voting_session_id'], username,))
+                        mysql_conn.commit()
+                        cursor.close()
                     print(session['username'])
+                    print(session['voting_session_id'])
                     flash("Successfully logged-in!", category='success')
                     return redirect(url_for('admin_dashboard'))
                 else:
@@ -834,14 +845,23 @@ def ballot_position():
 
 @app.route('/election_title', methods=['GET', 'POST'])
 def election_title():
+    if 'voting_session_id' not in session:
+        session['voting_session_id'] = random.randint(8000000, 80000000)
+        cursor = mysql_conn.cursor()
+        cursor.execute('UPDATE admin SET voting_session_id=%s WHERE username=%s',
+                       (session['voting_session_id'], session['username'],))
+        mysql_conn.commit()
+        cursor.close()
     cursor = mysql_conn.cursor()
     cursor.execute('SELECT * from session where voting_session_id = %s', (session['voting_session_id'],))
     session_result = cursor.fetchone()
     cursor.close()
     if session_result is None:
         elec_title = request.form['election_title']
+        voting_session = 0
         cursor = mysql_conn.cursor()
-        cursor.execute('INSERT INTO session(election_title)VALUES (%s)', (elec_title,))
+        cursor.execute('INSERT INTO session(election_title,voting_session,voting_session_id)VALUES (%s,%s,%s)',
+                       (elec_title, voting_session, session["voting_session_id"]))
         mysql_conn.commit()
         cursor.close()
         session['election_title'] = elec_title
@@ -856,53 +876,61 @@ def election_title():
 
 @app.route('/start_session', methods=['GET', 'POST'])
 def start_session():
-    if request.method == 'POST':
+    print(session['voting_session_id'])
+    cursor = mysql_conn.cursor(dictionary=True)
+    cursor.execute('SELECT * from session where voting_session_id = %s', (session['voting_session_id'],))
+    session_result = cursor.fetchone()
+    print(session)
+    print(session_result)
+    cursor.close()
+    if session_result['voting_session'] == 0:
+        voting_session = 1
+        voting_session_id = session['voting_session_id']
+        start_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         cursor = mysql_conn.cursor()
-        cursor.execute('SELECT * from session where voting_session_id = %s', (session['voting_session_id'],))
-        session_result = cursor.fetchone()
-        print(session_result)
+        cursor.execute(
+            'UPDATE session SET voting_session=%s,start_date=%s,voting_session_id=%s where election_title=%s',
+            (voting_session, start_date, voting_session_id, session['election_title'],))
+        mysql_conn.commit()
         cursor.close()
-        if session_result['voting_session'] == 0:
-            voting_session = 1
-            voting_session_id = session_result['voting_session'] + 1
-            start_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            cursor = mysql_conn.cursor()
-            cursor.execute(
-                'UPDATE session SET voting_session=%s,start_date=%s,voting_session_id=%s where election_title=%s',
-                (voting_session, start_date, voting_session_id, session['election_title'],))
-            mysql_conn.commit()
-            cursor.close()
-            flash('The voting session has been created and started successfully!', category='success')
-            return redirect(url_for('admin_dashboard'))
-        elif session_result['voting_session'] == 1:
-            flash('A voting session has already been started. End the current voting session to start a new one.',
-                  category='danger')
-            return redirect(url_for('admin_dashboard'))
-        elif session_result['voting_session'] == 2:
-            flash('This voting session ')
+        flash('The voting session has been created and started successfully!', category='success')
+        return redirect(url_for('admin_dashboard'))
+    elif session_result['voting_session'] == 1:
+        flash('A voting session has already been started. End the current voting session to start a new one.',
+              category='danger')
+        return redirect(url_for('admin_dashboard'))
+    elif session_result['voting_session'] == 2:
+        flash('This voting session has already been ended!', category='danger')
+        return redirect(url_for('admin_dashboard'))
+    elif session_result['voting_session'] is None:
+        flash('Invalid voting session state!', category='danger')
+        return redirect(url_for('admin_dashboard'))
 
 
 @app.route('/end_session')
 def end_session():
-    if request.method == 'POST':
-        cursor = mysql_conn.cursor()
-        cursor.execute('SELECT * from session where voting_session_id = %s', (session['voting_session_id'],))
-        session_result = cursor.fetchone()
-        print(session_result)
-        cursor.close()
-        if session_result['voting_session']:
-            if session_result['voting_session'] == 1:
-                voting_session = 2
-                end_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                cursor = mysql_conn.cursor()
-                cursor.execute('UPDATE session SET voting_session=%s,end_date=%s WHERE election_title=%s',
-                               (voting_session, end_date, session['election_title'],))
-                cursor.close()
-                flash('Voting session successfully ended!', category='success')
-                return redirect(url_for('admin_dashboard'))
-            else:
-                flash('A session has to be started in order to be ended!', category='danger')
-                return redirect(url_for('admin_dashboard'))
-        else:
-            flash('A session has not been created!', category='danger')
+    cursor = mysql_conn.cursor(dictionary=True)
+    cursor.execute('SELECT * from session where voting_session_id = %s', (session['voting_session_id'],))
+    session_result = cursor.fetchone()
+    print(session_result)
+    cursor.close()
+    if session_result:
+        if session_result['voting_session'] == 1:
+            voting_session = 2
+            end_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            cursor = mysql_conn.cursor()
+            cursor.execute('UPDATE session SET voting_session=%s,end_date=%s WHERE election_title=%s',
+                           (voting_session, end_date, session['election_title'],))
+            mysql_conn.commit()
+            cursor.execute('UPDATE admin SET voting_session_id=Null WHERE username=%s', (session['username'],))
+            mysql_conn.commit()
+            cursor.close()
+            session.pop("voting_session_id", None)
+            flash('Voting session successfully ended!', category='success')
             return redirect(url_for('admin_dashboard'))
+        else:
+            flash('A session has to be started in order to be ended!', category='danger')
+            return redirect(url_for('admin_dashboard'))
+    else:
+        flash('A session has not been created!', category='danger')
+        return redirect(url_for('admin_dashboard'))

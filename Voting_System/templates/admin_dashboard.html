@@ -56,13 +56,43 @@
                         </div>
                         <div class="card-body">
                             <!-- Provide controls for managing the voting process -->
-                            <a href="#" class="btn btn-success">Create New Voting Session</a>
-                            <a href="#" class="btn btn-primary">Start Voting Session</a>
-                            <a href="#" class="btn btn-danger">End Current Voting Session</a>
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">Create New Voting Session
+                            </button>
+                            <a href="{{ url_for('start_session') }}" class="btn btn-primary">Start Voting Session</a>
+                            <a href="{{ url_for('end_session') }}" class="btn btn-danger">End Current Voting Session</a>
                             <form method="POST" action="{{ url_for('admin_dashboard') }}">
                                 <button type="submit" class="btn btn-warning" name="reset_votes">Reset Votes</button>
                             </form>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title " id="exampleModalLabel">Create Voting Session</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url_for('election_title') }}" method="POST">
+                            <!-- names -->
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <input type="text" class="form-control" placeholder="Election Title"
+                                           aria-label="Election Title"
+                                           name="election_title">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create Session</button>
+
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
                     </div>
                 </div>
             </div>
