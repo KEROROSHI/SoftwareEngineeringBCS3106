@@ -90,7 +90,7 @@ def get_total_votes(cursor):
 
 def get_top_candidates(cursor):
     sql = """SELECT c.firstname, c.lastname, COUNT(*) as votes_count FROM votes v 
-                JOIN candidates c ON v.candidate_id = c.id GROUP BY v.candidate_id ORDER BY votes_count DESC LIMIT 3"""
+                JOIN candidates c ON v.candidate_id = c.id GROUP BY v.candidate_id ORDER BY votes_count DESC"""
     cursor.execute(sql)
     return cursor.fetchall()
 
