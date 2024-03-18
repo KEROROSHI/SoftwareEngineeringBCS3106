@@ -903,27 +903,31 @@ def start_session():
     print(session)
     print(session_result)
     cursor.close()
-    if session_result['voting_session'] == 0:
-        voting_session = 1
-        voting_session_id = session['voting_session_id']
-        start_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        cursor = mysql_conn.cursor()
-        cursor.execute(
-            'UPDATE session SET voting_session=%s,start_date=%s,voting_session_id=%s where election_title=%s',
-            (voting_session, start_date, voting_session_id, session['election_title'],))
-        mysql_conn.commit()
-        cursor.close()
-        flash('The voting session has been created and started successfully!', category='success')
-        return redirect(url_for('admin_dashboard'))
-    elif session_result['voting_session'] == 1:
-        flash('A voting session has already been started. End the current voting session to start a new one.',
-              category='danger')
-        return redirect(url_for('admin_dashboard'))
-    elif session_result['voting_session'] == 2:
-        flash('This voting session has already been ended!', category='danger')
-        return redirect(url_for('admin_dashboard'))
-    elif session_result['voting_session'] is None:
-        flash('Invalid voting session state!', category='danger')
+    if session_result:
+        if session_result['voting_session'] == 0:
+            voting_session = 1
+            voting_session_id = session['voting_session_id']
+            start_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            cursor = mysql_conn.cursor()
+            cursor.execute(
+                'UPDATE session SET voting_session=%s,start_date=%s,voting_session_id=%s where election_title=%s',
+                (voting_session, start_date, voting_session_id, session['election_title'],))
+            mysql_conn.commit()
+            cursor.close()
+            flash('The voting session has been created and started successfully!', category='success')
+            return redirect(url_for('admin_dashboard'))
+        elif session_result['voting_session'] == 1:
+            flash('A voting session has already been started. End the current voting session to start a new one.',
+                  category='danger')
+            return redirect(url_for('admin_dashboard'))
+        elif session_result['voting_session'] == 2:
+            flash('This voting session has already been ended!', category='danger')
+            return redirect(url_for('admin_dashboard'))
+        elif session_result['voting_session'] is None:
+            flash('Invalid voting session state!', category='danger')
+            return redirect(url_for('admin_dashboard'))
+    else:
+        flash('A voting session has not been created. Create one in order to start it', category='danger')
         return redirect(url_for('admin_dashboard'))
 
 
@@ -952,7 +956,8 @@ def end_session():
             flash('A session has to be started in order to be ended!', category='danger')
             return redirect(url_for('admin_dashboard'))
     else:
-        flash('A session has not been created!', category='danger')
+        flash('A session has not been created or started. Please create and start one in order to end it!',
+              category='danger')
         return redirect(url_for('admin_dashboard'))
 
 
