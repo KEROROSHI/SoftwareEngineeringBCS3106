@@ -844,11 +844,15 @@ def election_title():
         cursor.execute('INSERT INTO session(election_title)VALUES (%s)', (elec_title,))
         mysql_conn.commit()
         cursor.close()
+        session['election_title'] = elec_title
         flash('Voting session successfully created!', category='success')
         return redirect(url_for('admin_dashboard'))
     else:
-        flash("A voting session has already been created. You'll need to end the current session to create and start a new one!",category='danger')
+        flash(
+            "A voting session has already been created. You'll need to end the current session to create and start a new one!",
+            category='danger')
         return redirect(url_for('admin_dashboard'))
+
 
 @app.route('/start_session', methods=['GET', 'POST'])
 def start_session():
@@ -863,8 +867,9 @@ def start_session():
             voting_session_id = session_result['voting_session'] + 1
             start_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             cursor = mysql_conn.cursor()
-            cursor.execute('INSERT INTO session(voting_session,start_date,voting_session_id)VALUES(%s,%s,%s)',
-                           (voting_session, start_date, voting_session_id,))
+            cursor.execute(
+                'UPDATE session SET voting_session=%s,start_date=%s,voting_session_id=%s where election_title=%s',
+                (voting_session, start_date, voting_session_id, session['election_title'],))
             mysql_conn.commit()
             cursor.close()
             flash('The voting session has been created and started successfully!', category='success')
@@ -886,7 +891,18 @@ def end_session():
         print(session_result)
         cursor.close()
         if session_result['voting_session']:
-            voting_session = 2
-            end_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            cursor = mysql_conn.cursor()
-            # cursor.execute('INSERT INTO session(end_date)VALUES (%s)', (voting_session,))
+            if session_result['voting_session'] == 1:
+                voting_session = 2
+                end_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                cursor = mysql_conn.cursor()
+                cursor.execute('UPDATE session SET voting_session=%s,end_date=%s WHERE election_title=%s',
+                               (voting_session, end_date, session['election_title'],))
+                cursor.close()
+                flash('Voting session successfully ended!', category='success')
+                return redirect(url_for('admin_dashboard'))
+            else:
+                flash('A session has to be started in order to be ended!', category='danger')
+                return redirect(url_for('admin_dashboard'))
+        else:
+            flash('A session has not been created!', category='danger')
+            return redirect(url_for('admin_dashboard'))
