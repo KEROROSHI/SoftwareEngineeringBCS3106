@@ -458,7 +458,7 @@ def admin_login():
                     print(session['username'])
                     print(session['voting_session_id'])
                     flash("Successfully logged-in!", category='success')
-                    flash(f'Current Session is {session["election_title"]}',category='info')
+                    flash(f'Current Session is {session["election_title"]}', category='info')
                     return redirect(url_for('admin_dashboard'))
                 else:
                     flash("Invalid username or password", category='danger')
@@ -863,8 +863,8 @@ def ballot_position():
     return render_template('ballot_position.html', positions=positions, placeholder_photo=placeholder_photo)
 
 
-@app.route('/election_title', methods=['GET', 'POST'])
-def election_title():
+@app.route('/create_session', methods=['GET', 'POST'])
+def create_session():
     if 'voting_session_id' not in session:
         session['voting_session_id'] = random.randint(8000000, 80000000)
         cursor = mysql_conn.cursor()
@@ -954,3 +954,9 @@ def end_session():
     else:
         flash('A session has not been created!', category='danger')
         return redirect(url_for('admin_dashboard'))
+
+
+@app.route('/admin/election_title')
+def election_title():
+    elec_title = session['election_title']
+    return render_template('election_title.html', election_title=elec_title)
