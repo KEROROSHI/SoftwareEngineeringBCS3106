@@ -55,6 +55,25 @@ VALUES (1, 'admin', '$2y$10$eoDZ8wGMOvMB/l/jF8UKEeBv2Co97I5CqmkIu.sUQxisnpqVFZ8w
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `session`
+--
+create table session
+(
+    id             int auto_increment
+        primary key,
+    election_title varchar(256) not null,
+    voting_session tinyint(1)   not null,
+    start_date     datetime     not null,
+    end_date       datetime     null
+);
+
+--
+-- RELATIONSHIPS FOR TABLE `candidates`:
+--
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `candidates`
 --
 
@@ -243,7 +262,21 @@ ALTER TABLE `votes`
 COMMIT;
 
 ALTER TABLE admin
-    MODIFY password varchar(120) NOT NULL;
+    MODIFY password varchar(255) NOT NULL;
+
+alter table admin
+    add voting_session_id int null;
+
+alter table session
+    add voting_session_id int null;
+
+alter table session
+    modify voting_session tinyint(1) null;
+
+alter table session
+    modify start_date datetime null;
+
+
 
 /*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS = @OLD_CHARACTER_SET_RESULTS */;

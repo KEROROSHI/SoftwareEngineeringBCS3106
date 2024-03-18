@@ -2,6 +2,7 @@ import hashlib
 import os
 import random
 import string
+from datetime import datetime
 
 import mysql.connector
 import mysql.connector
@@ -116,7 +117,7 @@ def voters():
         if request.method == 'POST':
             # Check if the post request has the file part
             if 'image' not in request.files:
-                flash('No file part',category='danger')
+                flash('No file part', category='danger')
                 return redirect(request.url)
 
             file = request.files['image']
@@ -829,3 +830,35 @@ def ballot_position():
         position['candidates'] = candidates
     placeholder_photo = '/static/images/istockphoto-1327592449-612x612.jpg'
     return render_template('ballot_position.html', positions=positions, placeholder_photo=placeholder_photo)
+
+
+@app.route('/election_title', methods=['GET', 'POST'])
+def election_title():
+    cursor = mysql_conn.cursor()
+    cursor.execute('SELECT * FROM session')
+    title = cursor.fetchall()
+    pass
+
+
+@app.route('/start_session', methods=['GET', 'POST'])
+def start_session():
+    if request.method == 'POST':
+        cursor = mysql_conn.cursor()
+        cursor.execute('SELECT * from session where voting_session_id = %s', (session['voting_session_id'],))
+        session_result = cursor.fetchall()
+        print(session_result)
+        cursor.close()
+        if session_result['voting_session'] == 0:
+            voting_session = 1
+            voting_session_id = session_result['voting_session'] + 1
+            start_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            cursor = mysql_conn.cursor()
+            cursor.execute('INSERT INTO session(voting_session,start_date,voting_session_id)VALUES(%s,%s,%s)',
+                           (voting_session, start_date, voting_session_id,))
+            mysql_conn.commit()
+            cursor.close()
+
+
+@app.route('/end_session')
+def end_session():
+    pass
