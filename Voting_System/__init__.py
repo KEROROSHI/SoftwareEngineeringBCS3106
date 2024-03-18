@@ -458,6 +458,7 @@ def admin_login():
                     print(session['username'])
                     print(session['voting_session_id'])
                     flash("Successfully logged-in!", category='success')
+                    flash(f'Current Session is {session["election_title"]}',category='info')
                     return redirect(url_for('admin_dashboard'))
                 else:
                     flash("Invalid username or password", category='danger')
@@ -573,6 +574,10 @@ def voter_login():
 @app.route('/voter_logout')
 def voter_logout():
     # Destroys the session that was set when the user clicks the logout button in the navbar
+    cursor = mysql_conn.cursor()
+    cursor.execute('UPDATE admin SET voting_session_id=Null WHERE username=%s', (session['voters_id'],))
+    mysql_conn.commit()
+    cursor.close()
     session.pop('id', None)
     session.pop('voters_id', None)
     session.pop('voters_name', None)
@@ -702,44 +707,59 @@ def position_delete(position_id):
 def ballot():
     cursor = mysql_conn.cursor(dictionary=True)
     # print(session)
-    if 'voters_id' in session:
-        cursor.execute("SELECT * FROM votes WHERE voters_id = %s", (session['id'],))
-        # print(session['id'])
-        votes = cursor.fetchall()
-        # print(votes)
+    cursor.execute('SELECT * FROM session WHERE end_date is Null')
+    session_result = cursor.fetchone()
+    cursor.close()
+    if session_result:
+        cursor = mysql_conn.cursor(dictionary=True)
+        cursor.execute('UPDATE voters SET voting_session_id=%s WHERE voters_id=%s',
+                       (session_result['voting_session_id'], session['voters_id'],))
+        mysql_conn.commit()
         cursor.close()
-        if len(votes) > 0:
-            flash("You have already voted for this", category='danger')
-            return redirect(url_for('already_voted'))
-        else:
+        elec_title = session_result['election_title']
+        if 'voters_id' in session:
             cursor = mysql_conn.cursor(dictionary=True)
-            cursor.execute("SELECT * FROM positions ORDER BY priority ASC")
-            positions = cursor.fetchall()
+            cursor.execute("SELECT * FROM votes WHERE voters_id = %s", (session['id'],))
+            # print(session['id'])
+            votes = cursor.fetchall()
+            # print(votes)
             cursor.close()
-            for position in positions:
+            if len(votes) > 0:
+                flash("You have already voted for this", category='danger')
+                return redirect(url_for('already_voted'))
+            else:
                 cursor = mysql_conn.cursor(dictionary=True)
-                cursor.execute("SELECT * FROM candidates WHERE position_id = %s", (position['id'],))
-                candidates = cursor.fetchall()
+                cursor.execute("SELECT * FROM positions ORDER BY priority ASC")
+                positions = cursor.fetchall()
                 cursor.close()
-                for candidate in candidates:
-                    checked = ''
-                    if position['description'] in request.form:
-                        value = request.form.getlist(position['description'])
-                        if str(candidate['id']) in value:
-                            checked = 'checked'
-                    input_type = 'checkbox' if position['max_vote'] > 1 else 'radio'
-                    candidate[
-                        'input'] = f'<input type="{input_type}" class="flat-red {position["description"]}" name="{position["description"]}" value="{candidate["id"]}" {checked}>'
-                    candidate['image'] = candidate['photo'] if candidate[
-                        'photo'] else url_for("static", filename="images/9691288a3fadba6a8e6173d4eea20488.jpg")
-                position['instruct'] = f'You may select up to {position["max_vote"]} candidates' if position[
-                                                                                                        'max_vote'] > 1 else 'Select only one candidate'
-                position['candidates'] = candidates
-            placeholder_photo = '/static/images/istockphoto-1327592449-612x612.jpg'
-            return render_template('ballot.html', positions=positions, placeholder_photo=placeholder_photo)
+                for position in positions:
+                    cursor = mysql_conn.cursor(dictionary=True)
+                    cursor.execute("SELECT * FROM candidates WHERE position_id = %s", (position['id'],))
+                    candidates = cursor.fetchall()
+                    cursor.close()
+                    for candidate in candidates:
+                        checked = ''
+                        if position['description'] in request.form:
+                            value = request.form.getlist(position['description'])
+                            if str(candidate['id']) in value:
+                                checked = 'checked'
+                        input_type = 'checkbox' if position['max_vote'] > 1 else 'radio'
+                        candidate[
+                            'input'] = f'<input type="{input_type}" class="flat-red {position["description"]}" name="{position["description"]}" value="{candidate["id"]}" {checked}>'
+                        candidate['image'] = candidate['photo'] if candidate[
+                            'photo'] else url_for("static", filename="images/9691288a3fadba6a8e6173d4eea20488.jpg")
+                    position['instruct'] = f'You may select up to {position["max_vote"]} candidates' if position[
+                                                                                                            'max_vote'] > 1 else 'Select only one candidate'
+                    position['candidates'] = candidates
+                placeholder_photo = '/static/images/istockphoto-1327592449-612x612.jpg'
+                return render_template('ballot.html', positions=positions, placeholder_photo=placeholder_photo,
+                                       elec_title=elec_title)
+        else:
+            flash('Please login to access that page!', category='danger')
+            return redirect(url_for('voter_login'))
     else:
-        flash('Please login to access that page!', category='danger')
-        return redirect(url_for('voter_login'))
+        flash('There is no available session to vote for!', category='info')
+        return render_template('no_voter_session.html')
 
 
 @app.route('/voter/submit_ballot', methods=['POST'])

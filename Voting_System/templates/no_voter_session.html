@@ -1,0 +1,17 @@
+{% extends 'base_voter.html' %}
+{% block title %}Ballot{% endblock %}
+{% block content %}
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <h1 class="text-center">There is no available session to vote for at this time. Check back soon!</h1>
+    </div>
+{% endblock %}

@@ -276,6 +276,8 @@ alter table session
 alter table session
     modify start_date datetime null;
 
+alter table voters
+    add voting_session_id int null;
 
 
 /*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;
