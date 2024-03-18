@@ -835,17 +835,27 @@ def ballot_position():
 @app.route('/election_title', methods=['GET', 'POST'])
 def election_title():
     cursor = mysql_conn.cursor()
-    cursor.execute('SELECT * FROM session')
-    title = cursor.fetchall()
-    pass
-
+    cursor.execute('SELECT * from session where voting_session_id = %s', (session['voting_session_id'],))
+    session_result = cursor.fetchone()
+    cursor.close()
+    if session_result is None:
+        elec_title = request.form['election_title']
+        cursor = mysql_conn.cursor()
+        cursor.execute('INSERT INTO session(election_title)VALUES (%s)', (elec_title,))
+        mysql_conn.commit()
+        cursor.close()
+        flash('Voting session successfully created!', category='success')
+        return redirect(url_for('admin_dashboard'))
+    else:
+        flash("A voting session has already been created. You'll need to end the current session to create and start a new one!",category='danger')
+        return redirect(url_for('admin_dashboard'))
 
 @app.route('/start_session', methods=['GET', 'POST'])
 def start_session():
     if request.method == 'POST':
         cursor = mysql_conn.cursor()
         cursor.execute('SELECT * from session where voting_session_id = %s', (session['voting_session_id'],))
-        session_result = cursor.fetchall()
+        session_result = cursor.fetchone()
         print(session_result)
         cursor.close()
         if session_result['voting_session'] == 0:
@@ -857,8 +867,26 @@ def start_session():
                            (voting_session, start_date, voting_session_id,))
             mysql_conn.commit()
             cursor.close()
+            flash('The voting session has been created and started successfully!', category='success')
+            return redirect(url_for('admin_dashboard'))
+        elif session_result['voting_session'] == 1:
+            flash('A voting session has already been started. End the current voting session to start a new one.',
+                  category='danger')
+            return redirect(url_for('admin_dashboard'))
+        elif session_result['voting_session'] == 2:
+            flash('This voting session ')
 
 
 @app.route('/end_session')
 def end_session():
-    pass
+    if request.method == 'POST':
+        cursor = mysql_conn.cursor()
+        cursor.execute('SELECT * from session where voting_session_id = %s', (session['voting_session_id'],))
+        session_result = cursor.fetchone()
+        print(session_result)
+        cursor.close()
+        if session_result['voting_session']:
+            voting_session = 2
+            end_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            cursor = mysql_conn.cursor()
+            # cursor.execute('INSERT INTO session(end_date)VALUES (%s)', (voting_session,))
