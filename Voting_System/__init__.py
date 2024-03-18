@@ -914,7 +914,7 @@ def start_session():
                 (voting_session, start_date, voting_session_id, session['election_title'],))
             mysql_conn.commit()
             cursor.close()
-            flash('The voting session has been created and started successfully!', category='success')
+            flash('The voting session has been started successfully!', category='success')
             return redirect(url_for('admin_dashboard'))
         elif session_result['voting_session'] == 1:
             flash('A voting session has already been started. End the current voting session to start a new one.',
