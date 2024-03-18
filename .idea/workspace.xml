@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="64dbc12f-db02-4fb0-bf89-350379c721fb" name="Changes" comment="" />
+=======
+    <list default="true" id="64dbc12f-db02-4fb0-bf89-350379c721fb" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Voting_System/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/__init__.py" afterDir="false" />
+    </list>
+>>>>>>> parent of 4ab8806 (Fixing errors)
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -211,8 +217,12 @@
       <workItem from="1710361452821" duration="55000" />
       <workItem from="1710361933106" duration="4260000" />
       <workItem from="1710572487602" duration="6000" />
+<<<<<<< HEAD
       <workItem from="1710739396022" duration="17304000" />
       <workItem from="1710759398525" duration="3131000" />
+=======
+      <workItem from="1710739396022" duration="12496000" />
+>>>>>>> parent of 4ab8806 (Fixing errors)
     </task>
     <servers />
   </component>
