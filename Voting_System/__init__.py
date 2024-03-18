@@ -575,7 +575,7 @@ def voter_login():
 def voter_logout():
     # Destroys the session that was set when the user clicks the logout button in the navbar
     cursor = mysql_conn.cursor()
-    cursor.execute('UPDATE admin SET voting_session_id=Null WHERE username=%s', (session['voters_id'],))
+    cursor.execute('UPDATE voters SET voting_session_id=Null WHERE voters_id=%s', (session['voters_id'],))
     mysql_conn.commit()
     cursor.close()
     session.pop('id', None)
