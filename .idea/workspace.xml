@@ -5,35 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="64dbc12f-db02-4fb0-bf89-350379c721fb" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Voting_System/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Voting_System/templates/admin_dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/Voting_System/templates/admin_dashboard.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Flask Main" />
-        <option value="Python Script" />
-        <option value="JavaScript File" />
-        <option value="HTML File" />
-      </list>
-    </option>
-  </component>
-  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
-    <envs>
-      <env key="FLASK_APP" value="app" />
-    </envs>
-    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
-    <option name="myEnvs">
-      <map>
-        <entry key="FLASK_APP" value="app" />
-      </map>
-    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -42,9 +19,10 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 3
 }</component>
-  <component name="ProjectId" id="2clZ6rT8aJVLrgttJKhCwY01wEE" />
+  <component name="ProjectId" id="2dreqfQ4QRuSElC2GAGveDERSXh" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
@@ -52,34 +30,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Flask server.Flask (app.py).executor": "Run",
-    "Flask server.SoftwareEngineeringBCS3106.executor": "Run",
-    "JavaScript Debug.ballot.html.executor": "Run",
-    "Python.run.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/User/Python Projexts/HelloWorld",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "settings.sync",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Flask server.Flask (app.py).executor&quot;: &quot;Run&quot;,
+    &quot;Flask server.SoftwareEngineeringBCS3106.executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript Debug.ballot.html.executor&quot;: &quot;Run&quot;,
+    &quot;Python.run.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/User/Python Projexts/HelloWorld&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mariadb"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mariadb&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\User\Python Projexts\SoftwareEngineeringBCS3106\Voting_System\static\BGimage" />
@@ -145,27 +123,9 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Flask (Voting_System/__init__.py)" type="Python.FlaskServer" temporary="true" nameIsGenerated="true">
-      <module name="SoftwareEngineeringBCS3106" />
-      <option name="target" value="$PROJECT_DIR$/Voting_System/__init__.py" />
-      <option name="targetType" value="PATH" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="launchJavascriptDebuger" value="false" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.run" />
-        <item itemvalue="JavaScript Debug.ballot.html" />
-        <item itemvalue="Flask server.Flask (Voting_System/__init__.py)" />
       </list>
     </recent_temporary>
   </component>
@@ -179,89 +139,23 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="64dbc12f-db02-4fb0-bf89-350379c721fb" name="Changes" comment="" />
-      <created>1708687953588</created>
+      <changelist id="056d38f9-70f3-4494-9efa-3b56cea93986" name="Changes" comment="" />
+      <created>1710770825413</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1708687953588</updated>
-      <workItem from="1708687958131" duration="227000" />
-      <workItem from="1708688284570" duration="6430000" />
-      <workItem from="1708701363762" duration="995000" />
-      <workItem from="1708712070692" duration="2453000" />
-      <workItem from="1708865204408" duration="83000" />
-      <workItem from="1708866267317" duration="142000" />
-      <workItem from="1708889454714" duration="251000" />
-      <workItem from="1708934921529" duration="134000" />
-      <workItem from="1708941771184" duration="542000" />
-      <workItem from="1708942942141" duration="546000" />
-      <workItem from="1709134772767" duration="1376000" />
-      <workItem from="1709288300018" duration="112000" />
-      <workItem from="1709289977360" duration="680000" />
-      <workItem from="1709292584811" duration="2000" />
-      <workItem from="1709298986234" duration="14000" />
-      <workItem from="1709709737553" duration="19439000" />
-      <workItem from="1709975798999" duration="40317000" />
-      <workItem from="1710051402589" duration="12346000" />
-      <workItem from="1710078250565" duration="6085000" />
-      <workItem from="1710128234358" duration="1090000" />
-      <workItem from="1710154208749" duration="7498000" />
-      <workItem from="1710178248637" duration="25000" />
-      <workItem from="1710178295662" duration="6514000" />
-      <workItem from="1710234828484" duration="46000" />
-      <workItem from="1710236931045" duration="1618000" />
-      <workItem from="1710239952206" duration="255000" />
-      <workItem from="1710260425804" duration="826000" />
-      <workItem from="1710262144866" duration="1226000" />
-      <workItem from="1710361452821" duration="55000" />
-      <workItem from="1710361933106" duration="4260000" />
-      <workItem from="1710572487602" duration="6000" />
-      <workItem from="1710739396022" duration="13808000" />
+      <updated>1710770825413</updated>
+      <workItem from="1710770825417" duration="555000" />
+      <workItem from="1710807326249" duration="603000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="OPEN_GENERIC_TABS">
-      <map>
-        <entry key="16d46c24-e7b6-40bf-a24e-883329728769" value="TOOL_WINDOW" />
-      </map>
-    </option>
-    <option name="TAB_STATES">
-      <map>
-        <entry key="16d46c24-e7b6-40bf-a24e-883329728769">
-          <value>
-            <State />
-          </value>
-        </entry>
-        <entry key="MAIN">
-          <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="origin/jason" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/SoftwareEngineeringBCS3106$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1709798825674" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/SoftwareEngineeringBCS3106$SoftwareEngineeringBCS3106.coverage" NAME="SoftwareEngineeringBCS3106 Coverage Results" MODIFIED="1710051432974" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/SoftwareEngineeringBCS3106$run.coverage" NAME="run Coverage Results" MODIFIED="1710750925859" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/SoftwareEngineeringBCS3106$run.coverage" NAME="run Coverage Results" MODIFIED="1710810177231" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/SoftwareEngineeringBCS3016$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1708688098811" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>
