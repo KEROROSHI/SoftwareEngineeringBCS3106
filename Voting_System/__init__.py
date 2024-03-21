@@ -869,7 +869,7 @@ def ballot_position():
     return render_template('ballot_position.html', positions=positions, placeholder_photo=placeholder_photo)
 
 
-@app.route('/create_session', methods=['GET', 'POST'])
+@app.route('/admin/create_session', methods=['GET', 'POST'])
 def create_session():
     if 'voting_session_id' not in session:
         session['voting_session_id'] = random.randint(8000000, 80000000)
@@ -900,7 +900,7 @@ def create_session():
         return redirect(url_for('admin_dashboard'))
 
 
-@app.route('/start_session', methods=['GET', 'POST'])
+@app.route('/admin/start_session', methods=['GET', 'POST'])
 def start_session():
     if 'voting_session_id' in session:
         print(session['voting_session_id'])
@@ -941,7 +941,7 @@ def start_session():
         return redirect(url_for('admin_dashboard'))
 
 
-@app.route('/end_session')
+@app.route('/admin/end_session')
 def end_session():
     if 'voting_session_id' in session:
         cursor = mysql_conn.cursor(dictionary=True)
