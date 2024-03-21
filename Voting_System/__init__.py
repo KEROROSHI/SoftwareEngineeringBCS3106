@@ -978,5 +978,9 @@ def end_session():
 
 @app.route('/admin/election_title')
 def election_title():
-    elec_title = session['election_title']
-    return render_template('election_title.html', election_title=elec_title)
+    if 'election_title' in session:
+        elec_title = session['election_title']
+        return render_template('election_title.html', election_title=elec_title)
+    else:
+        flash('A voting session has not been created or has already been ended!', category='danger')
+        return render_template('election_title.html')
