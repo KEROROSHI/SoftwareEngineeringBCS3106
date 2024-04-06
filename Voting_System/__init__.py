@@ -713,7 +713,7 @@ def position_delete(position_id):
 
 @app.route('/voter/ballot', methods=['GET', 'POST'])
 def ballot():
-    if 'voter_id' in session:
+    if 'voters_id' in session:
         cursor = mysql_conn.cursor(dictionary=True)
         cursor.execute('SELECT * FROM session WHERE end_date is Null and start_date is not Null')
         session_result = cursor.fetchone()
