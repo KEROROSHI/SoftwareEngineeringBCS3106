@@ -463,6 +463,7 @@ def admin_login():
                     print(session['voting_session_id'])
                     flash("Successfully logged-in!", category='success')
                     if session_result:
+                        session['election_title'] = session_result['election_title']
                         flash(f'Current Session is {session_result["election_title"]}', category='info')
                     else:
                         flash('There is no session currently created!', category='info')
