@@ -463,9 +463,10 @@ def admin_login():
                     print(session['voting_session_id'])
                     flash("Successfully logged-in!", category='success')
                     if session_result:
+                        session['election_title'] = session_result['election_title']
                         flash(f'Current Session is {session_result["election_title"]}', category='info')
                     else:
-                        flash('The is no session currently created!', category='info')
+                        flash('There is no session currently created!', category='info')
                     return redirect(url_for('admin_dashboard'))
                 else:
                     flash("Invalid username or password", category='danger')
@@ -483,6 +484,7 @@ def admin_login():
 def admin_logout():
     # Destroys the session that was set when the user clicks the logout button in the navbar
     session.pop('username', None)
+    flash('You have been logged out', category='info')
     return redirect(url_for('admin_login'))
 
 
@@ -712,60 +714,64 @@ def position_delete(position_id):
 
 @app.route('/voter/ballot', methods=['GET', 'POST'])
 def ballot():
-    cursor = mysql_conn.cursor(dictionary=True)
-    cursor.execute('SELECT * FROM session WHERE end_date is Null and start_date is not Null')
-    session_result = cursor.fetchone()
-    cursor.close()
-    if session_result:
+    if 'voters_id' in session:
         cursor = mysql_conn.cursor(dictionary=True)
-        cursor.execute('UPDATE voters SET voting_session_id=%s WHERE voters_id=%s',
-                       (session_result['voting_session_id'], session['voters_id'],))
-        mysql_conn.commit()
+        cursor.execute('SELECT * FROM session WHERE end_date is Null and start_date is not Null')
+        session_result = cursor.fetchone()
         cursor.close()
-        elec_title = session_result['election_title']
-        if 'voters_id' in session:
+        if session_result:
             cursor = mysql_conn.cursor(dictionary=True)
-            cursor.execute("SELECT * FROM votes WHERE voters_id = %s", (session['id'],))
-            # print(session['id'])
-            votes = cursor.fetchall()
-            # print(votes)
+            cursor.execute('UPDATE voters SET voting_session_id=%s WHERE voters_id=%s',
+                           (session_result['voting_session_id'], session['voters_id'],))
+            mysql_conn.commit()
             cursor.close()
-            if len(votes) > 0:
-                flash("You have already voted for this", category='danger')
-                return redirect(url_for('already_voted'))
-            else:
+            elec_title = session_result['election_title']
+            if 'voters_id' in session:
                 cursor = mysql_conn.cursor(dictionary=True)
-                cursor.execute("SELECT * FROM positions ORDER BY priority ASC")
-                positions = cursor.fetchall()
+                cursor.execute("SELECT * FROM votes WHERE voters_id = %s", (session['id'],))
+                # print(session['id'])
+                votes = cursor.fetchall()
+                # print(votes)
                 cursor.close()
-                for position in positions:
+                if len(votes) > 0:
+                    flash("You have already voted for this", category='danger')
+                    return redirect(url_for('already_voted'))
+                else:
                     cursor = mysql_conn.cursor(dictionary=True)
-                    cursor.execute("SELECT * FROM candidates WHERE position_id = %s", (position['id'],))
-                    candidates = cursor.fetchall()
+                    cursor.execute("SELECT * FROM positions ORDER BY priority ASC")
+                    positions = cursor.fetchall()
                     cursor.close()
-                    for candidate in candidates:
-                        checked = ''
-                        if position['description'] in request.form:
-                            value = request.form.getlist(position['description'])
-                            if str(candidate['id']) in value:
-                                checked = 'checked'
-                        input_type = 'checkbox' if position['max_vote'] > 1 else 'radio'
-                        candidate[
-                            'input'] = f'<input type="{input_type}" class="flat-red {position["description"]}" name="{position["description"]}" value="{candidate["id"]}" {checked}>'
-                        candidate['image'] = candidate['photo'] if candidate[
-                            'photo'] else url_for("static", filename="images/9691288a3fadba6a8e6173d4eea20488.jpg")
-                    position['instruct'] = f'You may select up to {position["max_vote"]} candidates' if position[
-                                                                                                            'max_vote'] > 1 else 'Select only one candidate'
-                    position['candidates'] = candidates
-                placeholder_photo = '/static/images/istockphoto-1327592449-612x612.jpg'
-                return render_template('ballot.html', positions=positions, placeholder_photo=placeholder_photo,
-                                       elec_title=elec_title)
+                    for position in positions:
+                        cursor = mysql_conn.cursor(dictionary=True)
+                        cursor.execute("SELECT * FROM candidates WHERE position_id = %s", (position['id'],))
+                        candidates = cursor.fetchall()
+                        cursor.close()
+                        for candidate in candidates:
+                            checked = ''
+                            if position['description'] in request.form:
+                                value = request.form.getlist(position['description'])
+                                if str(candidate['id']) in value:
+                                    checked = 'checked'
+                            input_type = 'checkbox' if position['max_vote'] > 1 else 'radio'
+                            candidate[
+                                'input'] = f'<input type="{input_type}" class="flat-red {position["description"]}" name="{position["description"]}" value="{candidate["id"]}" {checked}>'
+                            candidate['image'] = candidate['photo'] if candidate[
+                                'photo'] else url_for("static", filename="images/9691288a3fadba6a8e6173d4eea20488.jpg")
+                        position['instruct'] = f'You may select up to {position["max_vote"]} candidates' if position[
+                                                                                                                'max_vote'] > 1 else 'Select only one candidate'
+                        position['candidates'] = candidates
+                    placeholder_photo = '/static/images/istockphoto-1327592449-612x612.jpg'
+                    return render_template('ballot.html', positions=positions, placeholder_photo=placeholder_photo,
+                                           elec_title=elec_title)
+            else:
+                flash('Please login to access that page!', category='danger')
+                return redirect(url_for('voter_login'))
         else:
-            flash('Please login to access that page!', category='danger')
-            return redirect(url_for('voter_login'))
+            flash('There is no available session to vote for!', category='info')
+            return render_template('no_voter_session.html')
     else:
-        flash('There is no available session to vote for!', category='info')
-        return render_template('no_voter_session.html')
+        flash('You must log as a voter first to vote!', category='danger')
+        return redirect(url_for('voter_login'))
 
 
 @app.route('/voter/submit_ballot', methods=['POST'])
@@ -832,6 +838,7 @@ def submit_ballot():
                 return redirect(url_for('ballot'))
         return redirect(url_for('ballot'))  # Redirect to the ballot page if method is not POST
     else:
+        flash('You must log as a voter first to vote!', category='error')
         return redirect(url_for('voter_login'))  # Redirect to the login page if voters_id is not in session
 
 
@@ -842,145 +849,166 @@ def already_voted():
 
 @app.route('/admin/ballot_position')
 def ballot_position():
-    cursor = mysql_conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM positions ORDER BY priority ASC")
-    positions = cursor.fetchall()
-    cursor.close()
-    for position in positions:
+    if 'username' in session:
         cursor = mysql_conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM candidates WHERE position_id = %s", (position['id'],))
-        candidates = cursor.fetchall()
+        cursor.execute("SELECT * FROM positions ORDER BY priority ASC")
+        positions = cursor.fetchall()
         cursor.close()
-        for candidate in candidates:
-            checked = ''
-            if position['description'] in request.form:
-                value = request.form.getlist(position['description'])
-                if str(candidate['id']) in value:
-                    checked = 'checked'
-            input_type = 'checkbox' if position['max_vote'] > 1 else 'radio'
-            candidate[
-                'input'] = f'<input type="{input_type}" class="flat-red {position["description"]}" name="{position["description"]}" value="{candidate["id"]}" {checked}>'
-            candidate['image'] = candidate['photo'] if candidate[
-                'photo'] else url_for("static", filename="images/9691288a3fadba6a8e6173d4eea20488.jpg")
-        position['instruct'] = f'You may select up to {position["max_vote"]} candidates' if position[
-                                                                                                'max_vote'] > 1 else 'Select only one candidate'
-        position['candidates'] = candidates
-    placeholder_photo = '/static/images/istockphoto-1327592449-612x612.jpg'
-    return render_template('ballot_position.html', positions=positions, placeholder_photo=placeholder_photo)
-
-
-@app.route('/create_session', methods=['GET', 'POST'])
-def create_session():
-    if 'voting_session_id' not in session:
-        session['voting_session_id'] = random.randint(8000000, 80000000)
-        cursor = mysql_conn.cursor()
-        cursor.execute('UPDATE admin SET voting_session_id=%s WHERE username=%s',
-                       (session['voting_session_id'], session['username'],))
-        mysql_conn.commit()
-        cursor.close()
-    cursor = mysql_conn.cursor()
-    cursor.execute('SELECT * from session where voting_session_id = %s', (session['voting_session_id'],))
-    session_result = cursor.fetchone()
-    cursor.close()
-    if session_result is None:
-        elec_title = request.form['election_title']
-        voting_session = 0
-        cursor = mysql_conn.cursor()
-        cursor.execute('INSERT INTO session(election_title,voting_session,voting_session_id)VALUES (%s,%s,%s)',
-                       (elec_title, voting_session, session["voting_session_id"]))
-        mysql_conn.commit()
-        cursor.close()
-        session['election_title'] = elec_title
-        flash('Voting session successfully created!', category='success')
-        return redirect(url_for('admin_dashboard'))
+        for position in positions:
+            cursor = mysql_conn.cursor(dictionary=True)
+            cursor.execute("SELECT * FROM candidates WHERE position_id = %s", (position['id'],))
+            candidates = cursor.fetchall()
+            cursor.close()
+            for candidate in candidates:
+                checked = ''
+                if position['description'] in request.form:
+                    value = request.form.getlist(position['description'])
+                    if str(candidate['id']) in value:
+                        checked = 'checked'
+                input_type = 'checkbox' if position['max_vote'] > 1 else 'radio'
+                candidate[
+                    'input'] = f'<input type="{input_type}" class="flat-red {position["description"]}" name="{position["description"]}" value="{candidate["id"]}" {checked}>'
+                candidate['image'] = candidate['photo'] if candidate[
+                    'photo'] else url_for("static", filename="images/9691288a3fadba6a8e6173d4eea20488.jpg")
+            position['instruct'] = f'You may select up to {position["max_vote"]} candidates' if position[
+                                                                                                    'max_vote'] > 1 else 'Select only one candidate'
+            position['candidates'] = candidates
+        placeholder_photo = '/static/images/istockphoto-1327592449-612x612.jpg'
+        return render_template('ballot_position.html', positions=positions, placeholder_photo=placeholder_photo)
     else:
-        flash(
-            "A voting session has already been created. You'll need to end the current session to create and start a new one!",
-            category='danger')
-        return redirect(url_for('admin_dashboard'))
+        flash("You must be logged in as an administrator to access that page!", category='danger')
+        return redirect(url_for('admin_login'))
 
 
-@app.route('/start_session', methods=['GET', 'POST'])
-def start_session():
-    if 'voting_session_id' in session:
-        print(session['voting_session_id'])
-        cursor = mysql_conn.cursor(dictionary=True)
+@app.route('/admin/create_session', methods=['GET', 'POST'])
+def create_session():
+    if 'username' in session:
+        if 'voting_session_id' not in session:
+            session['voting_session_id'] = random.randint(8000000, 80000000)
+            cursor = mysql_conn.cursor()
+            cursor.execute('UPDATE admin SET voting_session_id=%s WHERE username=%s',
+                           (session['voting_session_id'], session['username'],))
+            mysql_conn.commit()
+            cursor.close()
+        cursor = mysql_conn.cursor()
         cursor.execute('SELECT * from session where voting_session_id = %s', (session['voting_session_id'],))
         session_result = cursor.fetchone()
-        print(session)
-        print(session_result)
         cursor.close()
-        if session_result:
-            if session_result['voting_session'] == 0:
-                voting_session = 1
-                voting_session_id = session['voting_session_id']
-                start_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                cursor = mysql_conn.cursor()
-                cursor.execute(
-                    'UPDATE session SET voting_session=%s,start_date=%s,voting_session_id=%s where election_title=%s',
-                    (voting_session, start_date, voting_session_id, session['election_title'],))
-                mysql_conn.commit()
-                cursor.close()
-                flash('The voting session has been started successfully!', category='success')
-                return redirect(url_for('admin_dashboard'))
-            elif session_result['voting_session'] == 1:
-                flash('A voting session has already been started. End the current voting session to start a new one.',
-                      category='danger')
-                return redirect(url_for('admin_dashboard'))
-            elif session_result['voting_session'] == 2:
-                flash('This voting session has already been ended!', category='danger')
-                return redirect(url_for('admin_dashboard'))
-            elif session_result['voting_session'] is None:
-                flash('Invalid voting session state!', category='danger')
+        if session_result is None:
+            elec_title = request.form['election_title']
+            voting_session = 0
+            cursor = mysql_conn.cursor()
+            cursor.execute('INSERT INTO session(election_title,voting_session,voting_session_id)VALUES (%s,%s,%s)',
+                           (elec_title, voting_session, session["voting_session_id"]))
+            mysql_conn.commit()
+            cursor.close()
+            session['election_title'] = elec_title
+            flash('Voting session successfully created!', category='success')
+            return redirect(url_for('admin_dashboard'))
+        else:
+            flash(
+                "A voting session has already been created. You'll need to end the current session to create and start a new one!",
+                category='danger')
+            return redirect(url_for('admin_dashboard'))
+    else:
+        flash("You must be logged in as an administrator to access that page!", category='danger')
+        return redirect(url_for('admin_login'))
+
+
+@app.route('/admin/start_session', methods=['GET', 'POST'])
+def start_session():
+    if 'username' in session:
+        if 'voting_session_id' in session:
+            print(session['voting_session_id'])
+            cursor = mysql_conn.cursor(dictionary=True)
+            cursor.execute('SELECT * from session where voting_session_id = %s', (session['voting_session_id'],))
+            session_result = cursor.fetchone()
+            print(session)
+            print(session_result)
+            cursor.close()
+            if session_result:
+                if session_result['voting_session'] == 0:
+                    voting_session = 1
+                    voting_session_id = session['voting_session_id']
+                    start_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    cursor = mysql_conn.cursor()
+                    cursor.execute(
+                        'UPDATE session SET voting_session=%s,start_date=%s,voting_session_id=%s where election_title=%s',
+                        (voting_session, start_date, voting_session_id, session['election_title'],))
+                    mysql_conn.commit()
+                    cursor.close()
+                    flash('The voting session has been started successfully!', category='success')
+                    return redirect(url_for('admin_dashboard'))
+                elif session_result['voting_session'] == 1:
+                    flash(
+                        'A voting session has already been started. End the current voting session to start a new one.',
+                        category='danger')
+                    return redirect(url_for('admin_dashboard'))
+                elif session_result['voting_session'] == 2:
+                    flash('This voting session has already been ended!', category='danger')
+                    return redirect(url_for('admin_dashboard'))
+                elif session_result['voting_session'] is None:
+                    flash('Invalid voting session state!', category='danger')
+                    return redirect(url_for('admin_dashboard'))
+            else:
+                flash('A voting session has not been created. Create one in order to start it', category='danger')
                 return redirect(url_for('admin_dashboard'))
         else:
             flash('A voting session has not been created. Create one in order to start it', category='danger')
             return redirect(url_for('admin_dashboard'))
     else:
-        flash('A voting session has not been created. Create one in order to start it', category='danger')
-        return redirect(url_for('admin_dashboard'))
+        flash("You must be logged in as an administrator to access that page!", category='danger')
+        return redirect(url_for('admin_login'))
 
 
-@app.route('/end_session')
+@app.route('/admin/end_session')
 def end_session():
-    if 'voting_session_id' in session:
-        cursor = mysql_conn.cursor(dictionary=True)
-        cursor.execute('SELECT * from session where voting_session_id = %s', (session['voting_session_id'],))
-        session_result = cursor.fetchone()
-        print(session_result)
-        cursor.close()
-        if session_result:
-            if session_result['voting_session'] == 1:
-                voting_session = 2
-                end_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                cursor = mysql_conn.cursor()
-                cursor.execute('UPDATE session SET voting_session=%s,end_date=%s WHERE election_title=%s',
-                               (voting_session, end_date, session['election_title'],))
-                mysql_conn.commit()
-                cursor.execute('UPDATE admin SET voting_session_id=Null WHERE username=%s', (session['username'],))
-                mysql_conn.commit()
-                cursor.close()
-                session.pop("voting_session_id", None)
-                flash('Voting session successfully ended!', category='success')
-                return redirect(url_for('admin_dashboard'))
+    if 'username' in session:
+        if 'voting_session_id' in session:
+            cursor = mysql_conn.cursor(dictionary=True)
+            cursor.execute('SELECT * from session where voting_session_id = %s', (session['voting_session_id'],))
+            session_result = cursor.fetchone()
+            print(session_result)
+            cursor.close()
+            if session_result:
+                if session_result['voting_session'] == 1:
+                    voting_session = 2
+                    end_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    cursor = mysql_conn.cursor()
+                    cursor.execute('UPDATE session SET voting_session=%s,end_date=%s WHERE election_title=%s',
+                                   (voting_session, end_date, session['election_title'],))
+                    mysql_conn.commit()
+                    cursor.execute('UPDATE admin SET voting_session_id=Null WHERE username=%s', (session['username'],))
+                    mysql_conn.commit()
+                    cursor.close()
+                    session.pop("voting_session_id", None)
+                    flash('Voting session successfully ended!', category='success')
+                    return redirect(url_for('admin_dashboard'))
+                else:
+                    flash('A session has to be started in order to be ended!', category='danger')
+                    return redirect(url_for('admin_dashboard'))
             else:
-                flash('A session has to be started in order to be ended!', category='danger')
+                flash('A session has not been created or started. Please create and start one in order to end it!',
+                      category='danger')
                 return redirect(url_for('admin_dashboard'))
         else:
             flash('A session has not been created or started. Please create and start one in order to end it!',
                   category='danger')
             return redirect(url_for('admin_dashboard'))
     else:
-        flash('A session has not been created or started. Please create and start one in order to end it!',
-              category='danger')
-        return redirect(url_for('admin_dashboard'))
+        flash("You must be logged in as an administrator to access that page!", category='danger')
+        return redirect(url_for('admin_login'))
 
 
 @app.route('/admin/election_title')
 def election_title():
-    if 'election_title' in session:
-        elec_title = session['election_title']
-        return render_template('election_title.html', election_title=elec_title)
+    if 'username' in session:
+        if 'election_title' in session:
+            elec_title = session['election_title']
+            return render_template('election_title.html', election_title=elec_title)
+        else:
+            flash('A voting session has not been created or has already been ended!', category='danger')
+            return render_template('election_title.html')
     else:
-        flash('A voting session has not been created or has already been ended!', category='danger')
-        return render_template('election_title.html')
+        flash("You must be logged in as an administrator to access that page!", category='danger')
+        return redirect(url_for('admin_login'))
