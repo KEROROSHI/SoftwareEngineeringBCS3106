@@ -75,14 +75,15 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;reference.idesettings.debugger.python&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mariadb&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mariadb"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\User\Python Projexts\SoftwareEngineeringBCS3106\Voting_System\Database" />
       <recent name="C:\Users\User\Python Projexts\SoftwareEngineeringBCS3106\Voting_System\Database" />
       <recent name="C:\Users\User\Python Projexts\SoftwareEngineeringBCS3106\Voting_System\static\BGimage" />
       <recent name="C:\Users\User\Python Projexts\SoftwareEngineeringBCS3106\Voting_System\static" />
