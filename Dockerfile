@@ -1,11 +1,8 @@
 # Base image
-FROM ubuntu:22.04
+FROM python:3.12-alpine
 
 # Author
 LABEL authors="Jason"
-
-# Installing System Dependacies
-RUN apt update && apt upgrade -y && apt install python3 -y && apt install python3-pip -y && apt-get install libmysqlclient-dev -y && apt-get install pkg-config -y
 
 # Setting Working Directory
 WORKDIR /app
