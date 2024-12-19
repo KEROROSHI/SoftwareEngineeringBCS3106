@@ -9,7 +9,6 @@ filelock
 absl-py
 gast
 grpcio
-h5py
 ipython
 parso
 jedi
@@ -24,8 +23,6 @@ Werkzeug
 click
 blinker
 itsdangerous
-keras
-optree
 packaging
 requests
 namex
@@ -43,7 +40,6 @@ mpmath
 sympy
 platformdirs
 PyYAML
-psutil
 certifi
 urllib3
 greenlet
