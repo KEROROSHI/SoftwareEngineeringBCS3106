@@ -15,20 +15,21 @@ app = Flask(__name__, template_folder="./templates")
 app.secret_key = 'your_secret_key'
 app.config['SECRET_KEY'] = "8939e180f759844a0a5d0947"
 
-host = os.getenv("DB_HOST","localhost")
-user = os.getenv("DB_USER","root")
-password = os.getenv("DB_PASS","")
-database = os.getenv("DB_NAME","votingsystem")
+host = os.getenv("DB_HOST", "localhost")
+user = os.getenv("DB_USER", "root")
+password = os.getenv("DB_PASS", "")
+database = os.getenv("DB_NAME", "votingsystem")
+
 
 # MySQL configurations
 def connect_to_db():
     for attempt in range(10):
         try:
             mysql_conn = mysql.connector.connect(
-                host = host,
-                user = user,
-                passwd = password,
-                database = database
+                host=host,
+                user=user,
+                passwd=password,
+                database=database
             )
             print("Database Connected Successfully")
             return mysql_conn
@@ -36,6 +37,7 @@ def connect_to_db():
             print(f"Attempt {attempt + 1}: Unable to connect to database. Retrying in 5 seconds...")
             time.sleep(5)
     raise Exception("Unable to connect to database after 10 attempts.")
+
 
 mysql_conn = connect_to_db()
 
