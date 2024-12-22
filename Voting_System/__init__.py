@@ -3,9 +3,10 @@ import os
 import random
 import string
 from datetime import datetime
+import time
 
 import mysql.connector
-import mysql.connector
+from mysql.connector import Error
 from flask import Flask, flash, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -14,13 +15,29 @@ app = Flask(__name__, template_folder="./templates")
 app.secret_key = 'your_secret_key'
 app.config['SECRET_KEY'] = "8939e180f759844a0a5d0947"
 
+host = os.getenv("DB_HOST","localhost")
+user = os.getenv("DB_USER","root")
+password = os.getenv("DB_PASS","")
+database = os.getenv("DB_NAME","votingsystem")
+
 # MySQL configurations
-mysql_conn = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    passwd="",
-    database="votingsystem"
-)
+def connect_to_db():
+    for attempt in range(10):
+        try:
+            mysql_conn = mysql.connector.connect(
+                host = host,
+                user = user,
+                passwd = password,
+                database = database
+            )
+            print("Database Connected Successfully")
+            return mysql_conn
+        except Error as e:
+            print(f"Attempt {attempt + 1}: Unable to connect to database. Retrying in 5 seconds...")
+            time.sleep(5)
+    raise Exception("Unable to connect to database after 10 attempts.")
+
+mysql_conn = connect_to_db()
 
 UPLOAD_FOLDER = 'Voting_System/static/images/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
