@@ -1,0 +1,39 @@
+services:
+  app:
+    build: .
+    ports:
+      - "5001:5001"
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: foobarbaz
+      DB_NAME: votingsystem
+    depends_on:
+      db:
+        condition: service_healthy # Wait until the DB is healthy
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: foobarbaz
+      MYSQL_DATABASE: votingsystem
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysqldata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysqldata:
