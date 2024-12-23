@@ -52,8 +52,12 @@ def hash_password(password):  # Function to hash the given password when creatin
     return hashed_password
 
 
+# Uses pbkdf2 as the hashing method
 def checked_hashed_password(fetched_password,
                             attempted_password):  # Function to compare hashed password to the given password
+    """
+    Uses pbkdf2 as the hashing method
+    """
     return check_password_hash(fetched_password, attempted_password)
 
 
@@ -94,7 +98,7 @@ def generate_voter_id(length=15):
 
 
 def hashed_password(password):
-    return generate_password_hash(password)
+    return generate_password_hash(password, method="pbkdf2", salt_length=16)
 
 
 def check_password(password, hashed_password):
@@ -753,7 +757,7 @@ def ballot():
                 # print(votes)
                 cursor.close()
                 if len(votes) > 0:
-                    flash("You have already voted for this", category='danger')
+                    flash("You have already voted for this election!", category='danger')
                     return redirect(url_for('already_voted'))
                 else:
                     cursor = mysql_conn.cursor(dictionary=True)
