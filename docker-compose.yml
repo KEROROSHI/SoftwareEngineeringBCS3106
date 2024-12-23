@@ -13,6 +13,7 @@ services:
         condition: service_healthy # Wait until the DB is healthy
     networks:
       - app-network
+    restart: unless-stopped
 
   db:
     image: mysql:8.0
@@ -30,6 +31,7 @@ services:
       retries: 5
     networks:
       - app-network
+    restart: unless-stopped
 
 networks:
   app-network:

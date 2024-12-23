@@ -48,6 +48,9 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 def hash_password(password):  # Function to hash the given password when creating a user
+    """
+    Uses pbkdf2 as the hashing method
+    """
     hashed_password = generate_password_hash(password)
     return hashed_password
 
@@ -55,9 +58,6 @@ def hash_password(password):  # Function to hash the given password when creatin
 # Uses pbkdf2 as the hashing method
 def checked_hashed_password(fetched_password,
                             attempted_password):  # Function to compare hashed password to the given password
-    """
-    Uses pbkdf2 as the hashing method
-    """
     return check_password_hash(fetched_password, attempted_password)
 
 
