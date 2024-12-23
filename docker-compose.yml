@@ -14,6 +14,7 @@ services:
     networks:
       - app-network
     restart: unless-stopped
+    init: true
 
   db:
     image: mysql:8.0
@@ -25,7 +26,7 @@ services:
     volumes:
       - mysqldata:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
       timeout: 5s
       retries: 5
