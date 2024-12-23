@@ -1,6 +1,6 @@
 services:
   app:
-    build: .
+    image: keroshi/flask-voting-system:2.1 # You can optionally build another image from the project files if you have made changes to it
     ports:
       - "5001:5001"
     environment:
