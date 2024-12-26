@@ -17,7 +17,7 @@ app.config['SECRET_KEY'] = "8939e180f759844a0a5d0947"
 
 host = os.getenv("DB_HOST", "localhost")
 user = os.getenv("DB_USER", "root")
-password = os.getenv("DB_PASS", "")
+password = os.getenv("DB_PASSWORD", "")
 database = os.getenv("DB_NAME", "votingsystem")
 
 
