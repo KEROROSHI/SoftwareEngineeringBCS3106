@@ -55,9 +55,9 @@ def create_database_if_not_exists():
             cursor.close()
             temp_conn.close()
         except Error as e:
-            print(f"Attempt {attempt + 1}: Unable to connect to database. Retrying in 5 seconds...")
+            print(f"Attempt {attempt + 1}: Unable to create database. Retrying in 5 seconds...")
             time.sleep(5)
-    raise Exception("Unable to connect to database after 10 attempts.")
+    raise Exception("Unable to create database after 10 attempts.")
 
 
 def create_admin_table_if_not_exists(conn):
@@ -176,11 +176,12 @@ def create_session_table_if_not_exists(conn):
         print(f"Error creating users table: {e}")
 
 
-mysql_conn = connect_to_db()
+
 
 
 def setup_database():
     create_database_if_not_exists()
+    mysql_conn = connect_to_db()
     create_admin_table_if_not_exists(mysql_conn)
     seed_admin_from_config("config/admin_config.json")  # Ensure the config directory exists in your image
     create_candidates_table_if_not_exists(mysql_conn)
