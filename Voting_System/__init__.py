@@ -220,6 +220,8 @@ def setup_database():
     create_candidates_table_if_not_exists(mysql_conn)
     create_positions_table_if_not_exists(mysql_conn)
     create_session_table_if_not_exists(mysql_conn)
+    create_voters_table_if_not_exists(mysql_conn)
+    create_votes_table_if_not_exists(mysql_conn)
 
 
 setup_database()
