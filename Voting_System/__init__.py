@@ -78,7 +78,7 @@ def create_admin_table_if_not_exists(conn):
         print("`admin` table checked/created.")
         cursor.close()
     except Error as e:
-        print(f"Error creating users table: {e}")
+        print(f"Error creating admin table: {e}")
 
 
 def seed_admin_from_config(config_path="config/admin_config.json"):
@@ -137,7 +137,7 @@ def create_candidates_table_if_not_exists(conn):
         print("`candidates` table checked/created.")
         cursor.close()
     except Error as e:
-        print(f"Error creating users table: {e}")
+        print(f"Error creating candidates table: {e}")
 
 
 def create_positions_table_if_not_exists(conn):
@@ -154,7 +154,7 @@ def create_positions_table_if_not_exists(conn):
         print("`positions` table checked/created.")
         cursor.close()
     except Error as e:
-        print(f"Error creating users table: {e}")
+        print(f"Error creating positions table: {e}")
 
 
 def create_session_table_if_not_exists(conn):
@@ -173,10 +173,7 @@ def create_session_table_if_not_exists(conn):
         print("`session` table checked/created.")
         cursor.close()
     except Error as e:
-        print(f"Error creating users table: {e}")
-
-
-
+        print(f"Error creating session table: {e}")
 
 
 def setup_database():
