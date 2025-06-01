@@ -58,7 +58,8 @@ def create_database_if_not_exists():
             print(f"Attempt {attempt + 1}: Unable to connect to database. Retrying in 5 seconds...")
             time.sleep(5)
     raise Exception("Unable to connect to database after 10 attempts.")
-        
+
+
 def create_admin_table_if_not_exists(conn):
     try:
         cursor = conn.cursor()
@@ -137,7 +138,8 @@ def create_candidates_table_if_not_exists(conn):
         cursor.close()
     except Error as e:
         print(f"Error creating users table: {e}")
-        
+
+
 def create_positions_table_if_not_exists(conn):
     try:
         cursor = conn.cursor()
@@ -153,8 +155,8 @@ def create_positions_table_if_not_exists(conn):
         cursor.close()
     except Error as e:
         print(f"Error creating users table: {e}")
-        
-        
+
+
 def create_session_table_if_not_exists(conn):
     try:
         cursor = conn.cursor()
@@ -173,19 +175,20 @@ def create_session_table_if_not_exists(conn):
     except Error as e:
         print(f"Error creating users table: {e}")
 
+
 mysql_conn = connect_to_db()
+
 
 def setup_database():
     create_database_if_not_exists()
     create_admin_table_if_not_exists(mysql_conn)
-    seed_admin_from_config("config/admin_config.json") # Ensure the config directory exists in your image
+    seed_admin_from_config("config/admin_config.json")  # Ensure the config directory exists in your image
     create_candidates_table_if_not_exists(mysql_conn)
     create_positions_table_if_not_exists(mysql_conn)
     create_session_table_if_not_exists(mysql_conn)
-    
-    
-    
 
+
+setup_database()
 
 UPLOAD_FOLDER = 'Voting_System/static/images/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
