@@ -47,6 +47,17 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+def load_admin_user(config_path="config/admin_config.json"):
+    if os.path.exists(config_path):
+        with open(config_path, "r") as f:
+            admin_data = json.load(f)
+            create_or_verify_admin(admin_data)
+
+def create_or_verify_admin(admin_data):
+    # Add logic to check if the admin exists in memory or local store
+    # or just set it in a global config
+    print(f"Admin user loaded: {admin_data['username']}")
+
 
 def hash_password(password):  # Function to hash the given password when creating a user
     """

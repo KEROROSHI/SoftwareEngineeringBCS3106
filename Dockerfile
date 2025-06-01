@@ -23,6 +23,9 @@ RUN pip install -r requirements.txt
 # Copies the rest of the files into the working directory app
 COPY . /app
 
+# Copy the admin user config file
+COPY admin_config.json ./config/admin_config.json
+
 # Exposes the port 5001 to the container for usage
 EXPOSE 5001
 
