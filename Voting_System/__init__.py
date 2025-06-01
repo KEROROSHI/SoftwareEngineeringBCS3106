@@ -65,7 +65,7 @@ def create_admin_table_if_not_exists(conn):
     try:
         cursor = conn.cursor()
         cursor.execute("""
-        CREATE TABLE `admin` (
+        CREATE TABLE IF NOT EXISTS `admin` (
             `id` int(11) NOT NULL,
             `username` varchar(50) NOT NULL,
             `password` varchar(255) NOT NULL,
@@ -90,7 +90,7 @@ def seed_admin_from_config(config_path="config/admin_config.json"):
         cursor = mysql_conn.cursor()
 
         # Check if admin user exists
-        check_query = "SELECT * FROM users WHERE username = %s"
+        check_query = "SELECT * FROM admin WHERE username = %s"
         cursor.execute(check_query, (admin_data["username"],))
         existing_user = cursor.fetchone()
 
@@ -102,7 +102,7 @@ def seed_admin_from_config(config_path="config/admin_config.json"):
 
             insert_query = """
             INSERT INTO `admin` (`id`, `username`, `password`, `firstname`, `lastname`, `photo`, `created_on`, `voting_session_id`)
-            VALUES (%s, %s, %s, %s)
+            VALUES (%d, %s, %s, %s, %s, %s, %s, %d)
             """
             cursor.execute(insert_query, (
                 admin_data["id"],
@@ -162,7 +162,7 @@ def create_session_table_if_not_exists(conn):
     try:
         cursor = conn.cursor()
         cursor.execute("""
-        CREATE TABLE `session` (
+        CREATE TABLE IF NOT EXISTS `session` (
             `id` int(11) NOT NULL,
             `election_title` varchar(256) NOT NULL,
             `voting_session` tinyint(1) DEFAULT NULL,
@@ -175,13 +175,48 @@ def create_session_table_if_not_exists(conn):
         cursor.close()
     except Error as e:
         print(f"Error creating session table: {e}")
+        
+def create_voters_table_if_not_exists(conn):
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS `voters` (
+            `id` int(11) NOT NULL,
+            `voters_id` varchar(15) NOT NULL,
+            `password` varchar(120) NOT NULL,
+            `firstname` varchar(30) NOT NULL,
+            `lastname` varchar(30) NOT NULL,
+            `photo` varchar(150) NOT NULL,
+            `voting_session_id` int(11) DEFAULT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci
+        """)
+        print("`voters` table checked/created.")
+        cursor.close()
+    except Error as e:
+        print(f"Error creating voters table: {e}")        
 
+def create_votes_table_if_not_exists(conn):
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS `votes` (
+            `id` int(11) NOT NULL,
+            `voters_id` int(11) NOT NULL,
+            `candidate_id` int(11) NOT NULL,
+            `position_id` int(11) NOT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci
+        """)
+        print("`votes` table checked/created.")
+        cursor.close()
+    except Error as e:
+        print(f"Error creating votes table: {e}")
+
+mysql_conn = connect_to_db()
 
 def setup_database():
     create_database_if_not_exists()
-    mysql_conn = connect_to_db()
     create_admin_table_if_not_exists(mysql_conn)
-    seed_admin_from_config("config/admin_config.json")  # Ensure the config directory exists in your image
+    seed_admin_from_config("admin_config.json")  # Ensure the config directory exists in your image
     create_candidates_table_if_not_exists(mysql_conn)
     create_positions_table_if_not_exists(mysql_conn)
     create_session_table_if_not_exists(mysql_conn)
