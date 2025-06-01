@@ -216,7 +216,7 @@ mysql_conn = connect_to_db()
 def setup_database():
     create_database_if_not_exists()
     create_admin_table_if_not_exists(mysql_conn)
-    seed_admin_from_config("admin_config.json")  # Ensure the config directory exists in your image
+    seed_admin_from_config("config/admin_config.json")  # Ensure the config directory exists in your image
     create_candidates_table_if_not_exists(mysql_conn)
     create_positions_table_if_not_exists(mysql_conn)
     create_session_table_if_not_exists(mysql_conn)
