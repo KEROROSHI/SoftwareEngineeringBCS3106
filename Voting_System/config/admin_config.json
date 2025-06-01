@@ -1,0 +1,9 @@
+{
+  "username": "pyadmin",
+  "password": "pbkdf2:sha256:260000$l3xv1YO0aexkMOjv$38339366cfda5f38feb4d51057e5111e100268565ae9bf408a17a42bb1d74236",
+  "firstname": "Admin",
+  "lastnamr": "Admin",
+  "photo": "facebook-profile-image.jpeg",
+  "created_on": "",
+  "roles": ["admin"]
+}
