@@ -54,6 +54,7 @@ def create_database_if_not_exists():
             print(f"Database `{database}` checked/created.")
             cursor.close()
             temp_conn.close()
+            return None
         except Error as e:
             print(f"Attempt {attempt + 1}: Unable to create database. Retrying in 5 seconds...")
             time.sleep(5)
