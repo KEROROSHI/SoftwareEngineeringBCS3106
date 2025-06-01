@@ -40,23 +40,157 @@ def connect_to_db():
     raise Exception("Unable to connect to database after 10 attempts.")
 
 
+def create_database_if_not_exists():
+    for attempt in range(10):
+        try:
+            # Connect without specifying a DB
+            temp_conn = mysql.connector.connect(
+                host=host,
+                user=user,
+                passwd=password
+            )
+            cursor = temp_conn.cursor()
+            cursor.execute(f"CREATE DATABASE IF NOT EXISTS {database}")
+            print(f"Database `{database}` checked/created.")
+            cursor.close()
+            temp_conn.close()
+        except Error as e:
+            print(f"Attempt {attempt + 1}: Unable to connect to database. Retrying in 5 seconds...")
+            time.sleep(5)
+    raise Exception("Unable to connect to database after 10 attempts.")
+        
+def create_admin_table_if_not_exists(conn):
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+        CREATE TABLE `admin` (
+            `id` int(11) NOT NULL,
+            `username` varchar(50) NOT NULL,
+            `password` varchar(255) NOT NULL,
+            `firstname` varchar(50) NOT NULL,
+            `lastname` varchar(50) NOT NULL,
+            `photo` varchar(150) NOT NULL,
+            `created_on` date NOT NULL,
+            `voting_session_id` int(11) DEFAULT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci
+        """)
+        print("`admin` table checked/created.")
+        cursor.close()
+    except Error as e:
+        print(f"Error creating users table: {e}")
+
+
+def seed_admin_from_config(config_path="config/admin_config.json"):
+    try:
+        with open(config_path) as f:
+            admin_data = json.load(f)
+
+        cursor = mysql_conn.cursor()
+
+        # Check if admin user exists
+        check_query = "SELECT * FROM users WHERE username = %s"
+        cursor.execute(check_query, (admin_data["username"],))
+        existing_user = cursor.fetchone()
+
+        if existing_user:
+            print(f"Admin user '{admin_data['username']}' already exists.")
+        else:
+            # Hash the password
+            # hashed_pw = generate_password_hash(admin_data["password"])
+
+            insert_query = """
+            INSERT INTO `admin` (`id`, `username`, `password`, `firstname`, `lastname`, `photo`, `created_on`, `voting_session_id`)
+            VALUES (%s, %s, %s, %s)
+            """
+            cursor.execute(insert_query, (
+                admin_data["id"],
+                admin_data["username"],
+                admin_data["password"],
+                admin_data["firstname"],
+                admin_data["lastname"],
+                admin_data["photo"],
+                admin_data["created_on"],
+                admin_data["voting_session_id"]
+            ))
+            mysql_conn.commit()
+            print(f"Seeded admin user '{admin_data['username']}' into DB.")
+
+        cursor.close()
+    except Exception as e:
+        print(f"Error seeding admin user: {e}")
+
+
+def create_candidates_table_if_not_exists(conn):
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS `candidates` (
+            `id` int(11) NOT NULL,
+            `position_id` int(11) NOT NULL,
+            `firstname` varchar(30) NOT NULL,
+            `lastname` varchar(30) NOT NULL,
+            `photo` varchar(150) NOT NULL,
+            `platform` text NOT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci
+        """)
+        print("`candidates` table checked/created.")
+        cursor.close()
+    except Error as e:
+        print(f"Error creating users table: {e}")
+        
+def create_positions_table_if_not_exists(conn):
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS `positions` (
+            `id` int(11) NOT NULL,
+            `description` varchar(50) NOT NULL,
+            `max_vote` int(11) NOT NULL,
+            `priority` int(11) NOT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci
+        """)
+        print("`positions` table checked/created.")
+        cursor.close()
+    except Error as e:
+        print(f"Error creating users table: {e}")
+        
+        
+def create_session_table_if_not_exists(conn):
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+        CREATE TABLE `session` (
+            `id` int(11) NOT NULL,
+            `election_title` varchar(256) NOT NULL,
+            `voting_session` tinyint(1) DEFAULT NULL,
+            `start_date` datetime DEFAULT NULL,
+            `end_date` datetime DEFAULT NULL,
+            `voting_session_id` int(11) DEFAULT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+        """)
+        print("`session` table checked/created.")
+        cursor.close()
+    except Error as e:
+        print(f"Error creating users table: {e}")
+
 mysql_conn = connect_to_db()
+
+def setup_database():
+    create_database_if_not_exists()
+    create_admin_table_if_not_exists(mysql_conn)
+    seed_admin_from_config("config/admin_config.json") # Ensure the config directory exists in your image
+    create_candidates_table_if_not_exists(mysql_conn)
+    create_positions_table_if_not_exists(mysql_conn)
+    create_session_table_if_not_exists(mysql_conn)
+    
+    
+    
+
 
 UPLOAD_FOLDER = 'Voting_System/static/images/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-def load_admin_user(config_path="config/admin_config.json"):
-    if os.path.exists(config_path):
-        with open(config_path, "r") as f:
-            admin_data = json.load(f)
-            create_or_verify_admin(admin_data)
-
-def create_or_verify_admin(admin_data):
-    # Add logic to check if the admin exists in memory or local store
-    # or just set it in a global config
-    print(f"Admin user loaded: {admin_data['username']}")
 
 
 def hash_password(password):  # Function to hash the given password when creating a user
