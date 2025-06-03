@@ -210,6 +210,42 @@ def create_votes_table_if_not_exists(conn):
         cursor.close()
     except Error as e:
         print(f"Error creating votes table: {e}")
+        
+
+def create_primary_keys_if_not_exists(conn):
+    try:
+        cursor = conn.cursor()
+        alter_statements = [
+            "ALTER TABLE `admin` ADD PRIMARY KEY (`id`)",
+            "ALTER TABLE `candidates` ADD PRIMARY KEY (`id`)",
+            "ALTER TABLE `positions` ADD PRIMARY KEY (`id`)",
+            "ALTER TABLE `session` ADD PRIMARY KEY (`id`)",
+            "ALTER TABLE `voters` ADD PRIMARY KEY (`id`)",
+            "ALTER TABLE `votes` ADD PRIMARY KEY (`id`)",
+
+            "ALTER TABLE `admin` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1",
+            "ALTER TABLE `candidates` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1",
+            "ALTER TABLE `positions` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1",
+            "ALTER TABLE `session` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1",
+            "ALTER TABLE `voters` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1",
+            "ALTER TABLE `votes` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1",
+        ]
+
+        for stmt in alter_statements:
+            try:
+                cursor.execute(stmt)
+            except mysql.connector.Error as e:
+                # Ignore duplicate key or auto-increment errors (already exists)
+                if e.errno == 1068 or e.errno == 1075 or e.errno == 1060:
+                    continue
+                else:
+                    print(f"Error running statement: {stmt}\n{e}")
+        conn.commit()
+        cursor.close()
+        print("Primary keys checked/created successfully.")
+    except Exception as e:
+        print(f"Error creating primary keys: {e}")
+
 
 mysql_conn = connect_to_db()
 
