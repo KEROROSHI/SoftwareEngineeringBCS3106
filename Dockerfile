@@ -30,4 +30,4 @@ COPY admin_config.json ./config/admin_config.json
 EXPOSE 5001
 
 # Command to run the flask app
-CMD ["python3","run.py"]
+CMD ["python3", "run.py"]
